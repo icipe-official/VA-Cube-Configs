@@ -1,0 +1,19 @@
+
+# Ignore Helm release artifacts
+*.tgz
+*.lock
+
+# Ignore chart dependencies
+charts/
+tmpcharts/
+
+# Ignore Helm package output
+output/
+
+# Ignore rendered templates
+manifests/
+
+
+values.yaml
+values-*.yaml
+
