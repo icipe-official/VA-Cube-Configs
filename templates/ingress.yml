@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ printf "%s-ingress" .Release.Namespace }}
+  namespace: {{ .Values.Namespace}}
+
+
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+          rewrite ^(/video_classifier)(.*) $2 break;
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+spec:
+  ingressClassName: nginx
+  tls:
+  rules:
+    - host: {{ .Values.Host}}
+      http:
+        paths:
+          - path: /va
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ printf "%s-service" .Release.Namespace }}
+                port:
+                  number: 3002
