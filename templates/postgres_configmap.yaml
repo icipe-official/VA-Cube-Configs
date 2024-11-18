@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgress-configmap
+  namespace: {{ .Values.Namespace }}  # Reference the namespace from values.yaml
+data:
+  POSTGRES_USER: {{ .Values.postgress.POSTGRES_USER | quote }}
+  POSTGRES_PASSWORD: {{ .Values.postgress.POSTGRES_PASSWORD | quote }}
+  POSTGRES_DB: {{ .Values.postgress.POSTGRES_DB | quote }}
