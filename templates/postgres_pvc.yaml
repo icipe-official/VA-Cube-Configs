@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: postgrespvc
 spec:
   storageClassName: local-storage
   accessModes:
@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  volumeName: vectoratlas-pv
+  volumeName: vector-atlas-pv
