@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgrespvc
+  labels:
+    io.kompose.service: api-claim2
+  name: api-claim2
 spec:
-  storageClassName: local-storage
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  volumeName: vector-atlas-pv
+      storage: 100Mi

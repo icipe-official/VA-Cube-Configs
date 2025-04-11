@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.uat.yml -c
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ui
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.uat.yml -c
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: ui
+    spec:
+      containers:
+        - command:
+            - node
+            - server.js
+          env:
+            - name: API_URL
+              value: api
+            - name: AUTH0_AUDIENCE
+            - name: AUTH0_BASE_URL
+            - name: AUTH0_CLIENT_ID
+            - name: AUTH0_CLIENT_SECRET
+            - name: AUTH0_ISSUER_BASE_URL
+            - name: AUTH0_SECRET
+            - name: NEXT_PUBLIC_AUTH_ENDPOINT
+              value: http://api:3001/auth/token
+            - name: NEXT_PUBLIC_TOKEN_KEY
+          image: ghcr.io/icipe-official/ui:latest
+          name: ui
+      restartPolicy: Always

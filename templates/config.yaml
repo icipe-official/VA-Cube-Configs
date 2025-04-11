@@ -1,9 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: {{ printf "%s-configmap" .Release.Namespace }}
-  namespace: {{ .Values.Namespace }}
-data:
-  PGADMIN_DEFAULT_EMAIL: {{ .Values.pgAdmin.defaultEmail | quote }}
-  PGADMIN_DEFAULT_PASSWORD: {{ .Values.pgAdmin.defaultPassword | quote }}
-
