@@ -29,6 +29,6 @@ spec:
             - name: DATABASE_TYPE
               value: postgresql
             - name: DATABASE_URL
-          image: ghcr.io/icipe-official/docker-umami:latest
+          image: umamisoftware/umami:postgresql-v2.17.0
           name: analytics
       restartPolicy: Always
