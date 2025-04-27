@@ -28,53 +28,185 @@ spec:
             - dist/src/main.js
           env:
             - name: ANALYTICS_ADMIN_PASSWORD
+              valueFrom:
+                 secretKeyRef:
+                 name: uat-secrets
+                 key: ANALYTICS_ADMIN_PASSWORD_UAT
+                 optional: false
             - name: ANALYTICS_API_URL
               value: '"http://analytics:3000/analytics/api"'
             - name: AUTH0_AUDIENCE
+              valueFrom:
+                 secretKeyRef:
+                 name: uat-secrets
+                 key: AUTH0_AUDIENCE_UAT
+                 optional: false
             - name: AUTH0_CLIENT_ID
+              valueFrom:
+                 secretKeyRef:
+                 name: uat-secrets
+                 key: AUTH0_CLIENT_ID_UAT
+                 optional: false
             - name: AUTH0_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: AUTH0_CLIENT_SECRET_UAT
             - name: AUTH0_ISSUER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: AUTH0_ISSUER_URL_UAT
             - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: AZURE_STORAGE_CONNECTION_STRING_UAT
             - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: BASE_URL_UAT
             - name: CONFIG_FOLDER
               value: /etc/vector-atlas/api
             - name: DATACITE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATACITE_PASSWORD_UAT
             - name: DATACITE_PREFIX
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATACITE_PREFIX_UAT
             - name: DATACITE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATACITE_URL_UAT
             - name: DATACITE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATACITE_USER_UAT
             - name: DATA_INGESTION_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATA_INGESTION_URL_UAT
             - name: DATA_VALIDATION_URL
-            - name: DB_ENCRYPT_CONNECTION
-              value: "false"
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATA_VALIDATION_URL_UAT
+              value: "true"
             - name: DOI_ENVIRONMENT
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DOI_ENVIRONMENT_UAT
             - name: DOI_PUBLISHER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DOI_PUBLISHER_UAT
             - name: DOI_RESOLVER_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DOI_RESOLVER_BASE_URL_UAT
             - name: EMAIL_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: EMAIL_FROM_UAT
             - name: EMAIL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: EMAIL_HOST_UAT
             - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: EMAIL_PASSWORD_UAT
             - name: EMAIL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: EMAIL_PORT_UAT
             - name: EMAIL_SECURE
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: EMAIL_SECURE_UAT
             - name: FILE_STORAGE_TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: FILE_STORAGE_TYPE_UAT
             - name: IMAP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: IMAP_PORT_UAT
             - name: IMAP_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: IMAP_SERVER_UAT
             - name: NEXT_PUBLIC_ANALYTICS_ID
               value: '"2b3b6da0-3e75-4d9e-be86-d588496a174e"'
             - name: NEXT_PUBLIC_AUTH_ENDPOINT
               value: http://api:3001/auth/token
-            - name: NEXT_PUBLIC_TOKEN_KEY
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: TOKEN_KEY_UAT
             - name: OVERLAY_BLOB_FOLDER
               value: /data/blobStore/
             - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_DB_UAT
+                  optional: false
             - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_HOST_UAT
+                  optional: false
             - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_PASSWORD_UAT
+                  optional: false
             - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_USER_UAT
+                  optional: false
+
             - name: PUBLIC_FOLDER
               value: /usr/src/app/dist
             - name: SENT_EMAIL_FOLDER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: SENT_EMAIL_FOLDER_UAT
+                  optional: false
             - name: TEMP_DIR
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: TEMP_DIR_UAT
+                  optional: false
             - name: TILESERVER_DATA_FOLDER
               value: /data/
-            - name: TOKEN_KEY
           image: ghcr.io/icipe-official/api:latest
           name: api
           volumeMounts:
