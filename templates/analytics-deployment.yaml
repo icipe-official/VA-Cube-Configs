@@ -29,6 +29,11 @@ spec:
             - name: DATABASE_TYPE
               value: postgresql
             - name: DATABASE_URL
+              valueFrom:
+                 secretKeyRef:
+                 name: uat-secrets
+                 key: DATABASE_URL_ANALYTICS_UAT
+                 optional: false
           image: umamisoftware/umami:postgresql-v2.17.0
           name: analytics
       restartPolicy: Always
