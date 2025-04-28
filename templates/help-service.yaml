@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: help
+  namespace: vectoratlas
+spec:
+  selector:
+    io.kompose.service: help  # Match the label from the Deployment
+  ports:
+    - port: 80
+      targetPort: 80

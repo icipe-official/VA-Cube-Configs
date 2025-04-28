@@ -32,4 +32,6 @@ spec:
       volumes:
         - name: tileserver-claim0
           persistentVolumeClaim:
-            claimName: tileserver-claim0
+            claimName: pvc-data
+      imagePullSecrets:
+        - name: ghcr-login-secret

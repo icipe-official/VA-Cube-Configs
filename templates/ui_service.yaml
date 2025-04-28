@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: vectoratlas
+  labels:
+    io.kompose.service: ui
+spec:
+  selector:
+    io.kompose.service: ui
+  ports:
+    - port: 80
+      targetPort: 3000  # Change to the port your app is running on
+      protocol: TCP
+  type: ClusterIP

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tileserver
+  namespace: vectoratlas  # Replace with your desired namespace
+  labels:
+    service: tileserver
+spec:
+  selector:
+    io.kompose.service: tileserver  # This matches the label in the Deployment
+  ports:
+    - protocol: TCP
+      port: 80  # Expose the service on port 80
+      targetPort: 80  # This matches the port the container is listening on
+  clusterIP: None  # This is for headless service (if you need direct Pod access without load balancing)

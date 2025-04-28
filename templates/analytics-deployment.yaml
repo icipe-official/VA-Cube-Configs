@@ -21,7 +21,11 @@ spec:
         io.kompose.service: analytics
     spec:
       containers:
-        - env:
+        - name: analytics
+          image: umamisoftware/umami:postgresql-v2.17.0
+          ports:
+            - containerPort: 3000  # Adjust this based on your container's exposed port
+          env:
             - name: BASE_PATH
               value: /analytics
             - name: CLIENT_IP_HEADER
@@ -30,10 +34,9 @@ spec:
               value: postgresql
             - name: DATABASE_URL
               valueFrom:
-                 secretKeyRef:
-                 name: uat-secrets
-                 key: DATABASE_URL_ANALYTICS_UAT
-                 optional: false
-          image: umamisoftware/umami:postgresql-v2.17.0
-          name: analytics
+                secretKeyRef:
+                  name: uat-secrets
+                  key: DATABASE_URL_ANALYTICS_UAT
+                  optional: false
       restartPolicy: Always
+

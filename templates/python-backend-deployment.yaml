@@ -23,13 +23,36 @@ spec:
       containers:
         - env:
             - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_DB_UAT
+                  optional: false
             - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_HOST_UAT
+                  optional: false
             - name: POSTGRES_PASSWORD
-            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_PASSWORD_UAT
+                  optional: false
             - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_USER_UAT
+                  optional: false
+            - name: POSTGRES_PORT
+              value: "5432"
           image: ghcr.io/icipe-official/ingestionapi:latest
           name: python-backend
           ports:
             - containerPort: 8000
               protocol: TCP
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-login-secret

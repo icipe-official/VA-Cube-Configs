@@ -28,3 +28,5 @@ spec:
           image: ghcr.io/icipe-official/help:latest
           name: help
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-login-secret
