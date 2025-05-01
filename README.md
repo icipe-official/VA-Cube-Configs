@@ -1,1 +1,1 @@
-This chart was created by Kompose
+Helm chart for Vector Atlas
