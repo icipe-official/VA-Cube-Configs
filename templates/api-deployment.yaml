@@ -23,27 +23,26 @@ spec:
         io.kompose.service: api
     spec:
       containers:
-        - command:
-            - node
-            - dist/src/main.js
+        - name: api  # <-- Ensure the container name is correctly set here
+          image: ghcr.io/icipe-official/api:latest
           env:
             - name: ANALYTICS_ADMIN_PASSWORD
               valueFrom:
-                 secretKeyRef:
-                   name: uat-secrets
-                   key: ANALYTICS_ADMIN_PASSWORD_UAT
+                secretKeyRef:
+                  name: uat-secrets
+                  key: ANALYTICS_ADMIN_PASSWORD_UAT
             - name: ANALYTICS_API_URL
               value: '"http://analytics:3000/analytics/api"'
             - name: AUTH0_AUDIENCE
               valueFrom:
-                 secretKeyRef:
-                   name: uat-secrets
-                   key: AUTH0_AUDIENCE_UAT
+                secretKeyRef:
+                  name: uat-secrets
+                  key: AUTH0_AUDIENCE_UAT
             - name: AUTH0_CLIENT_ID
               valueFrom:
-                 secretKeyRef:
-                   name: uat-secrets
-                   key: AUTH0_CLIENT_ID_UAT
+                secretKeyRef:
+                  name: uat-secrets
+                  key: AUTH0_CLIENT_ID_UAT
             - name: AUTH0_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -196,8 +195,6 @@ spec:
                   key: TEMP_DIR_UAT
             - name: TILESERVER_DATA_FOLDER
               value: /data/
-          image: ghcr.io/icipe-official/api:latest
-          name: api
           volumeMounts:
             - mountPath: /usr/src/app/dist/public
               name: api-claim0
@@ -218,3 +215,4 @@ spec:
             claimName: pvc-data
       imagePullSecrets:
         - name: ghcr-login-secret
+
