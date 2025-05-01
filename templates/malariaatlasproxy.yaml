@@ -4,16 +4,17 @@ metadata:
   name: map-wms-ingress
   namespace: vectoratlas
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /geoserver/Interventions/wms/$2  # Rewrite path before forwarding
-    nginx.ingress.kubernetes.io/proxy-pass-url: https://data.malariaatlas.org # Direct proxy to external URL
+    nginx.ingress.kubernetes.io/rewrite-target: /geoserver/Interventions/wms/$2
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"  # Required when proxying to an HTTPS upstream
 spec:
   rules:
-    -http:
-      paths:
-        - path: /map-wms(/|$)(.*)
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: map-wms-service  # In case a service is required for internal routing
-              port:
-                number: 80           # Adjust if using internal service (optional)
+    - http:
+        paths:
+          - path: /map-wms(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: map-wms-service
+                port:
+                  number: 80
+

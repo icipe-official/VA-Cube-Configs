@@ -12,12 +12,13 @@ metadata:
     nginx.ingress.kubernetes.io/access-log-off: "true"
 spec:
   rules:
-    -http:
+    - http:
         paths:
           - path: /data/.+\.(png|pbf)$
             pathType: ImplementationSpecific
             backend:
               service:
-                name: tileserver  # Pointing to the tileserver service
+                name: tileserver
                 port:
                   number: 80
+
