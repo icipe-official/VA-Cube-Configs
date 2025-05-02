@@ -12,7 +12,8 @@ metadata:
     nginx.ingress.kubernetes.io/access-log-off: "true"
 spec:
   rules:
-    - http:
+   - host: test.vectoratlas.icipe.org
+     http:
         paths:
           - path: /data/.+\.(png|pbf)$
             pathType: ImplementationSpecific
@@ -21,4 +22,5 @@ spec:
                 name: tileserver
                 port:
                   number: 80
+  ingressClassName: nginx
 
