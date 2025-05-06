@@ -52,7 +52,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: uat-secrets
-                  key: AUTH0_ISSUER_URL_UAT
+                  key: AUTH0_ISSUER_URL_API_UAT
             - name: AZURE_STORAGE_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
