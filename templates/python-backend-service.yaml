@@ -9,8 +9,7 @@ metadata:
   name: python-backend
 spec:
   ports:
-    - name: "8000"
-      port: 8000
+    - port: 8000
       targetPort: 8000
   selector:
     io.kompose.service: python-backend
