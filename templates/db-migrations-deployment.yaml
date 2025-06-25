@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.uat.yml -c
@@ -8,10 +8,7 @@ metadata:
     io.kompose.service: db-migrations
   name: db-migrations
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      io.kompose.service: db-migrations
+  backoffLimit: 3
   template:
     metadata:
       annotations:
@@ -54,6 +51,6 @@ spec:
                   optional: false
           image: ghcr.io/icipe-official/api:latest
           name: db-migrations
-      restartPolicy: Always
+      restartPolicy: OnFailure
       imagePullSecrets:
         - name: ghcr-login-secret
