@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: api  # <-- Ensure the container name is correctly set here
-          image: ghcr.io/icipe-official/api:latest
+          image: ghcr.io/icipe-official/api:23e1f7a
           env:
             - name: ANALYTICS_ADMIN_PASSWORD
               valueFrom:

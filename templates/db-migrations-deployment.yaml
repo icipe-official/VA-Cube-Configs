@@ -6,7 +6,7 @@ metadata:
     kompose.version: 1.35.0 (9532ceef3)
   labels:
     io.kompose.service: db-migrations
-  name: db-migrations
+  name: db-migrations-{{ now | unixEpoch }}
 spec:
   backoffLimit: 3
   template:
@@ -49,7 +49,7 @@ spec:
                   name: uat-secrets
                   key: POSTGRES_USER_UAT
                   optional: false
-          image: ghcr.io/icipe-official/api:latest
+          image: ghcr.io/icipe-official/api:23e1f7a
           name: db-migrations
       restartPolicy: OnFailure
       imagePullSecrets:
