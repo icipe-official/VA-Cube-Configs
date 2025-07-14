@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: analytics
-          image: umamisoftware/umami:postgresql-v2.17.0
+          image: ghcr.io/icipe-official/umami:6718fcb
           ports:
             - containerPort: 3000  # Adjust this based on your container's exposed port
           env:
