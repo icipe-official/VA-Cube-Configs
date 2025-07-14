@@ -39,4 +39,6 @@ spec:
                   key: DATABASE_URL_ANALYTICS_UAT
                   optional: false
       restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-login-secret
 
