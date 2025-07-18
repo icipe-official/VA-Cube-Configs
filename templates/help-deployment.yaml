@@ -25,7 +25,7 @@ spec:
             - nginx
             - -g
             - daemon off;
-          image: ghcr.io/icipe-official/help:latest
+          image: {{ .Values.images.help.repository }}:{{ .Values.images.help.tag }}
           name: help
       restartPolicy: Always
       imagePullSecrets:
