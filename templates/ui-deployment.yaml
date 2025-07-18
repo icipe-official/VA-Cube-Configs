@@ -60,7 +60,7 @@ spec:
             - name: NEXT_PUBLIC_AUTH_ENDPOINT
               value: http://api:3001/auth/token
             - name: NEXT_PUBLIC_TOKEN_KEY
-          image: ghcr.io/icipe-official/ui:ddd945b
+          image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
           name: ui
       restartPolicy: Always
       imagePullSecrets:
