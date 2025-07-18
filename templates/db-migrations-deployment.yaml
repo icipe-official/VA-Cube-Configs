@@ -49,7 +49,7 @@ spec:
                   name: uat-secrets
                   key: POSTGRES_USER_UAT
                   optional: false
-          image: ghcr.io/icipe-official/api:23e1f7a
+          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
           name: db-migrations
       restartPolicy: OnFailure
       imagePullSecrets:
