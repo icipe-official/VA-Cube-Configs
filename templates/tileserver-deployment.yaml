@@ -23,7 +23,7 @@ spec:
         io.kompose.service: tileserver
     spec:
       containers:
-        - image: ghcr.io/icipe-official/tileserver:latest
+        - image: {{ .Values.images.tileserver.repository }}:{{ .Values.images.tileserver.tag }}
           name: tileserver
           volumeMounts:
             - mountPath: /data
