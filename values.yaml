@@ -1,7 +1,7 @@
 images:
   analytics:
     repository: ghcr.io/icipe-official/analytics
-    tag: latest
+    tag: 944ba4e
   api:
     repository: ghcr.io/icipe-official/api
     tag: latest
@@ -11,8 +11,8 @@ images:
   help:
     repository: ghcr.io/icipe-official/help
     tag: latest
-  pythonBackend:
-    repository: ghcr.io/icipe-official/python-backend
+  ingestionapi:
+    repository: ghcr.io/icipe-official/ingestionapi
     tag: latest
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
