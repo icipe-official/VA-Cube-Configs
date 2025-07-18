@@ -1,57 +1,66 @@
 name: Update image tags to match GHCR 'latest' SHA
 
 on:
+  # Allows you to run this workflow manually from the Actions tab in GitHub
   workflow_dispatch:
+  # Schedule to run every hour
   schedule:
     - cron: '0 * * * *' # Every hour
 
+# Permissions for the GITHUB_TOKEN. Explicitly granting
+# 'contents: write' for committing and 'packages: read' for GHCR access.
+# This helps prevent 403 errors for public packages, but for private
+# cross-repo packages, the GHCR_SECRET (PAT) will be the primary credential.
 permissions:
   contents: write # Needed for git commit and push
-  packages: read  # <--- THIS IS THE CRITICAL LINE FOR GHCR READ ACCESS
+  packages: read  # Needed for reading GHCR packages (even if PAT is used, good practice)
 
 jobs:
   update-image-tags:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # Grant write permissions for committing changes
-      packages: read  # Grant read access to packages for GHCR
+    runs-on: ubuntu-latest # Specify the runner environment
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Action to checkout your repository's code
 
       - name: Set up yq
-        uses: mikefarah/yq@v4
+        uses: mikefarah/yq@v4 # Action to set up yq (YAML processor)
         with:
           version: v4 # Specify a version for yq
 
       - name: Install jq (if not already present)
+        # jq is usually pre-installed on ubuntu-latest, but this ensures it.
         run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Update tags to match 'latest' SHA
-        id: update
+        id: update # Assigns an ID to this step to reference its outputs later
         env:
-          # Use GITHUB_TOKEN directly as it has 'packages:read' permission
-          # If you encounter issues, consider using a PAT with read:packages scope
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # --- CRITICAL: Using your GHCR_SECRET (Personal Access Token) for authentication ---
+          # This secret (e.g., GHCR_SECRET) must be set up in your repository's secrets.
+          # It should contain a PAT with 'read:packages' scope.
+          GHCR_TOKEN: ${{ secrets.GHCR_SECRET }}
         run: |
-          set -euo pipefail # Exit on error, unset variables, and pipeline errors
-          set -x            # Add this line for verbose output during debugging!
-          updated=0
+          # Exit immediately if a command exits with a non-zero status.
+          # Treat unset variables as an error.
+          # The return value of a pipeline is the status of the last command to exit with a non-zero status.
+          set -euo pipefail
 
-          # Function to fetch digest
+          updated=0 # Flag to track if any updates were made to values.yaml
+
+          # Function to fetch the Docker-Content-Digest for a given image and tag.
+          # Uses curl -sI for silent head request and -f to fail on HTTP errors.
           fetch_digest() {
             local image_path=$1
             local tag=$2
             local auth_header="Authorization: Bearer $GHCR_TOKEN"
             local accept_header="Accept: application/vnd.oci.image.manifest.v1+json"
             
-            curl -I -f -H "$auth_header" -H "$accept_header" \
+            curl -sI -f -H "$auth_header" -H "$accept_header" \
               "https://ghcr.io/v2/$image_path/manifests/$tag" \
               | grep -i '^Docker-Content-Digest:' | awk '{print $2}' | tr -d '\r'
           }
 
-          # Function to fetch tags
+          # Function to fetch all tags for a given image repository.
           fetch_tags() {
             local image_path=$1
             local auth_header="Authorization: Bearer $GHCR_TOKEN"
@@ -60,67 +69,80 @@ jobs:
               "https://ghcr.io/v2/$image_path/tags/list" | jq -r '.tags[]'
           }
 
+          # Loop through each image defined in values.yaml
           for name in $(yq e '.images | keys | .[]' values.yaml); do
             repo=$(yq e ".images.\"$name\".repository" values.yaml)
+            # Remove 'ghcr.io/' prefix to get the image path for API calls
             image_path=$(echo "$repo" | sed 's|ghcr.io/||')
 
             echo "Processing image: $name (Repository: $repo)"
 
-            # Get digest for 'latest'
+            # Get the digest (SHA) for the 'latest' tag of the current image
             digest_latest=$(fetch_digest "$image_path" "latest")
             
             if [ -z "$digest_latest" ]; then
-              echo "Error: Could not fetch digest for 'latest' of $repo. Skipping."
-              continue
+              echo "Error: Could not fetch digest for 'latest' of $repo. Skipping this image."
+              continue # Move to the next image in the loop
             fi
             echo "Latest digest for $repo: $digest_latest"
 
-            # Find tag matching same digest
+            # Initialize variable to store the matching SHA tag
             matching_sha=""
+            # Fetch all tags for the current image
             tags=$(fetch_tags "$image_path")
 
             if [ -z "$tags" ]; then
-              echo "Warning: No tags found for $repo. Skipping."
-              continue
+              echo "Warning: No tags found for $repo. Skipping this image."
+              continue # Move to the next image
             fi
 
+            # Loop through fetched tags to find one that matches the 'latest' digest
             for tag in $tags; do
-              if [ "$tag" = "latest" ]; then continue; fi
+              if [ "$tag" = "latest" ]; then continue; fi # Skip the 'latest' tag itself
               
-              # Optimization: Check if tag is likely a SHA before fetching digest
-              # Assuming SHA-like tags are typically longer and alphanumeric
-              if [[ "$tag" =~ ^[0-9a-fA-F]{7,40}$ ]]; then # Basic regex for SHA-like string
+              # Optimization: Only fetch digest for tags that look like SHAs
+              # This assumes SHA-like tags are typically 7 to 40 hex characters long
+              if [[ "$tag" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
                 digest=$(fetch_digest "$image_path" "$tag")
                 if [ "$digest" = "$digest_latest" ]; then
-                  matching_sha="$tag"
-                  break
+                  matching_sha="$tag" # Found a match
+                  break # Exit the inner loop, no need to check further tags
                 fi
               fi
             done
 
             if [ -z "$matching_sha" ]; then
-              echo "Warning: No matching SHA tag found for latest on $repo. This might be expected if 'latest' is a new, un-SHA-tagged build. Skipping."
-              continue
+              echo "Warning: No matching SHA tag found for digest $digest_latest on $repo. This might be expected if 'latest' is a new, un-SHA-tagged build. Skipping update for this image."
+              continue # Move to the next image
             fi
 
+            # Get the current tag from values.yaml
             current_tag=$(yq e ".images.\"$name\".tag" values.yaml)
 
+            # Compare current tag with the found matching SHA
             if [ "$current_tag" != "$matching_sha" ]; then
               echo "Updating $name: $current_tag -> $matching_sha"
+              # Use yq to update the tag in values.yaml in-place
               yq -i ".images.\"$name\".tag = \"$matching_sha\"" values.yaml
-              updated=1
+              updated=1 # Set flag to indicate changes were made
             else
               echo "$name tag is already up-to-date: $current_tag"
             fi
           done
 
+          # Output 'updated' status for subsequent steps (e.g., commit step)
           echo "updated=$updated" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push changes
+        # Only run this step if 'updated' output from the previous step is '1'
         if: steps.update.outputs.updated == '1'
         run: |
+          # Configure Git user for the commit
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Stage the modified values.yaml file
           git add values.yaml
+          # Commit the changes
           git commit -m "chore: update image tags to match GHCR 'latest' SHA"
+          # Push the changes to the current branch
           git push
