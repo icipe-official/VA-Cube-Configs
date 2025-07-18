@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: api  # <-- Ensure the container name is correctly set here
-          image: ghcr.io/icipe-official/api:ddd945b
+          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
           env:
             - name: ANALYTICS_ADMIN_PASSWORD
               valueFrom:
