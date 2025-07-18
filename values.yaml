@@ -1,0 +1,25 @@
+images:
+  analytics:
+    repository: ghcr.io/icipe-official/analytics
+    tag: latest
+  api:
+    repository: ghcr.io/icipe-official/api
+    tag: latest
+  dbMigrations:
+    repository: ghcr.io/icipe-official/db-migrations
+    tag: latest
+  help:
+    repository: ghcr.io/icipe-official/help
+    tag: latest
+  pythonBackend:
+    repository: ghcr.io/icipe-official/python-backend
+    tag: latest
+  tileserver:
+    repository: ghcr.io/icipe-official/tileserver
+    tag: latest
+  ui:
+    repository: ghcr.io/icipe-official/ui
+    tag: latest
+  umami:
+    repository: ghcr.io/icipe-official/umami
+    tag: latest
