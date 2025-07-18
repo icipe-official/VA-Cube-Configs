@@ -42,7 +42,7 @@ jobs:
             local auth_header="Authorization: Bearer $GHCR_TOKEN"
             local accept_header="Accept: application/vnd.oci.image.manifest.v1+json"
             
-            curl -sI -f -H "$auth_header" -H "$accept_header" \
+            curl -I -f -H "$auth_header" -H "$accept_header" \
               "https://ghcr.io/v2/$image_path/manifests/$tag" \
               | grep -i '^Docker-Content-Digest:' | awk '{print $2}' | tr -d '\r'
           }
