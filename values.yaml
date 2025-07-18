@@ -1,7 +1,4 @@
 images:
-  analytics:
-    repository: ghcr.io/icipe-official/analytics
-    tag: 944ba4e
   api:
     repository: ghcr.io/icipe-official/api
     tag: latest
