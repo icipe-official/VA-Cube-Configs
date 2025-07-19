@@ -1,22 +1,38 @@
+# .github/workflows/update-image-tags.yml (in icipe-official/VA-Cube-Configs repo)
+
 name: Update image tags to match GHCR 'latest' SHA
 
 on:
-  # Allows you to run this workflow manually from the Actions tab in GitHub
+  # Manual trigger to run this workflow from the Actions tab in GitHub
   workflow_dispatch:
-  # Schedule to run every hour
+    inputs:
+      # This input can be used to indicate if it was triggered by repository_dispatch
+      # or for other manual testing purposes.
+      triggered_by_repo_dispatch:
+        description: 'Set to true if triggered by repository_dispatch'
+        required: false
+        type: boolean
+        default: false
+
+  # Schedule to run every hour for a regular check/fallback
   schedule:
     - cron: '0 * * * *' # Every hour
 
-# Permissions for the GITHUB_TOKEN. Explicitly granting
-# 'contents: write' for committing and 'packages: read' for GHCR access.
-# This helps prevent 403 errors for public packages, but for private
-# cross-repo packages, the GHCR_SECRET (PAT) will be the primary credential.
+  # NEW: Triggered by a 'repository_dispatch' event from another repository
+  repository_dispatch:
+    types: [images_pushed] # This type must match the 'event-type' used in the triggering workflow
+
+# Permissions for the GITHUB_TOKEN (the default token for this workflow).
+# 'contents:write' is needed for git operations (checkout, commit, push).
+# 'packages:read' is good practice but for GHCR access, your GHCR_SECRET (PAT)
+# is the primary credential, as it grants access across repos/orgs if configured.
 permissions:
-  contents: write # Needed for git commit and push
-  packages: read  # Needed for reading GHCR packages (even if PAT is used, good practice)
+  contents: write # Needed for git commit and push to this repository
+  packages: read  # Needed for reading GHCR packages (good practice, but PAT is key)
 
 jobs:
   update-image-tags:
+    name: Update Helm Chart Image Tags
     runs-on: ubuntu-latest # Specify the runner environment
 
     steps:
@@ -28,7 +44,7 @@ jobs:
         with:
           version: v4 # Specify a version for yq
 
-      - name: Install jq (if not already present)
+      - name: Install jq
         # jq is usually pre-installed on ubuntu-latest, but this ensures it.
         run: sudo apt-get update && sudo apt-get install -y jq
 
@@ -36,37 +52,97 @@ jobs:
         id: update # Assigns an ID to this step to reference its outputs later
         env:
           # --- CRITICAL: Using your GHCR_SECRET (Personal Access Token) for authentication ---
-          # This secret (e.g., GHCR_SECRET) must be set up in your repository's secrets.
-          # It should contain a PAT with 'read:packages' scope.
+          # This secret (GHCR_SECRET) must be set up in your VA-Cube-Configs repository's secrets.
+          # It should contain a PAT with 'read:packages' scope and correct access to the GHCR package.
           GHCR_TOKEN: ${{ secrets.GHCR_SECRET }}
         run: |
           # Exit immediately if a command exits with a non-zero status.
           # Treat unset variables as an error.
           # The return value of a pipeline is the status of the last command to exit with a non-zero status.
           set -euo pipefail
+          set -x # <<< This enables command tracing, showing each command before it runs
+
+          echo "--- DEBUG: Checking GHCR_TOKEN variable (TOP-LEVEL in run step) ---"
+          # WARNING: This will expose part of your token in logs! Remove after debugging.
+          echo "GHCR_TOKEN (first 8 chars): ${GHCR_TOKEN:0:8}"
+          # For extreme debugging, uncomment the line below. HIGH RISK!
+          # echo "GHCR_TOKEN (FULL VALUE - DANGER! REMOVE AFTER DEBUGGING!): $GHCR_TOKEN"
+          echo "--- END DEBUG ---"
 
           updated=0 # Flag to track if any updates were made to values.yaml
 
           # Function to fetch the Docker-Content-Digest for a given image and tag.
-          # Uses curl -sI for silent head request and -f to fail on HTTP errors.
+          # Uses curl -v for verbose output, -I for head request, and -f to fail on HTTP errors.
           fetch_digest() {
             local image_path=$1
             local tag=$2
+            
+            # Additional debug inside function scope
+            echo "--- DEBUG (Inside fetch_digest function): Checking GHCR_TOKEN ---"
+            echo "GHCR_TOKEN (first 8 chars inside func): ${GHCR_TOKEN:0:8}"
+            echo "--- END DEBUG (Inside fetch_digest) ---"
+
             local auth_header="Authorization: Bearer $GHCR_TOKEN"
             local accept_header="Accept: application/vnd.oci.image.manifest.v1+json"
             
-            curl -sI -f -H "$auth_header" -H "$accept_header" \
-              "https://ghcr.io/v2/$image_path/manifests/$tag" \
-              | grep -i '^Docker-Content-Digest:' | awk '{print $2}' | tr -d '\r'
+            echo "--- DEBUG: Attempting to fetch digest for $image_path:$tag ---"
+            echo "URL: https://ghcr.io/v2/$image_path/manifests/$tag"
+            # WARNING: This will expose part of your token in logs! Remove after debugging.
+            echo "Auth Header used (shows token prefix): $auth_header"
+            
+            # Execute curl and capture ALL output (stdout and stderr) to a variable.
+            CURL_FULL_OUTPUT=$(curl -v -I -f -H "$auth_header" -H "$accept_header" \
+                               "https://ghcr.io/v2/$image_path/manifests/$tag" 2>&1)
+            CURL_EXIT_CODE=$?
+
+            echo "CURL COMMAND COMPLETED."
+            echo "CURL Exit Code: $CURL_EXIT_CODE"
+            echo "CURL Full Output (Headers, Status, potential Body):"
+            echo "$CURL_FULL_OUTPUT"
+            echo "--- END DEBUG OUTPUT ---"
+
+            if [ "$CURL_EXIT_CODE" -ne 0 ]; then
+                echo "Curl command failed for digest on $image_path:$tag. Details above."
+                return 1 # Indicate failure in the function
+            fi
+
+            # Now, try to extract the digest from the captured output
+            echo "$CURL_FULL_OUTPUT" | grep -i '^Docker-Content-Digest:' | awk '{print $2}' | tr -d '\r' | head -n 1
           }
 
           # Function to fetch all tags for a given image repository.
           fetch_tags() {
             local image_path=$1
+            
+            # Additional debug inside function scope
+            echo "--- DEBUG (Inside fetch_tags function): Checking GHCR_TOKEN ---"
+            echo "GHCR_TOKEN (first 8 chars inside func): ${GHCR_TOKEN:0:8}"
+            echo "--- END DEBUG (Inside fetch_tags) ---"
+
             local auth_header="Authorization: Bearer $GHCR_TOKEN"
             
-            curl -s -f -H "$auth_header" \
-              "https://ghcr.io/v2/$image_path/tags/list" | jq -r '.tags[]'
+            echo "--- DEBUG: Attempting to fetch tags for $image_path ---"
+            echo "URL: https://ghcr.io/v2/$image_path/tags/list"
+            # WARNING: This will expose part of your token in logs! Remove after debugging.
+            echo "Auth Header used (shows token prefix): $auth_header"
+            
+            # Execute curl and capture ALL output
+            CURL_FULL_OUTPUT=$(curl -v -s -f -H "$auth_header" \
+                               "https://ghcr.io/v2/$image_path/tags/list" 2>&1)
+            CURL_EXIT_CODE=$?
+
+            echo "CURL COMMAND COMPLETED."
+            echo "CURL Exit Code: $CURL_EXIT_CODE"
+            echo "CURL Full Output (Headers, Status, potential Body):"
+            echo "$CURL_FULL_OUTPUT"
+            echo "--- END DEBUG OUTPUT ---"
+
+            if [ "$CURL_EXIT_CODE" -ne 0 ]; then
+                echo "Curl command failed for tags on $image_path. Details above."
+                return 1 # Indicate failure
+            fi
+
+            echo "$CURL_FULL_OUTPUT" | jq -r '.tags[]' || { echo "jq failed to parse JSON from tags list. Output above." && return 1; }
           }
 
           # Loop through each image defined in values.yaml
@@ -78,38 +154,49 @@ jobs:
             echo "Processing image: $name (Repository: $repo)"
 
             # Get the digest (SHA) for the 'latest' tag of the current image
-            digest_latest=$(fetch_digest "$image_path" "latest")
+            digest_latest="" # Initialize
+            if ! digest_latest=$(fetch_digest "$image_path" "latest"); then
+              echo "Error: Failed to fetch digest for 'latest' of $repo. Skipping this image."
+              continue # Move to the next image in the loop
+            fi
             
             if [ -z "$digest_latest" ]; then
-              echo "Error: Could not fetch digest for 'latest' of $repo. Skipping this image."
-              continue # Move to the next image in the loop
+              echo "Error: Digest for 'latest' of $repo was empty after fetch. Skipping this image."
+              continue
             fi
             echo "Latest digest for $repo: $digest_latest"
 
             # Initialize variable to store the matching SHA tag
             matching_sha=""
-            # Fetch all tags for the current image
-            tags=$(fetch_tags "$image_path")
+            tags_output="" # Capture raw output for tags
+            if ! tags_output=$(fetch_tags "$image_path"); then
+                echo "Error: Failed to fetch tags for $repo. Skipping this image."
+                continue
+            fi
 
-            if [ -z "$tags" ]; then
+            if [ -z "$tags_output" ]; then
               echo "Warning: No tags found for $repo. Skipping this image."
-              continue # Move to the next image
+              continue
             fi
 
             # Loop through fetched tags to find one that matches the 'latest' digest
-            for tag in $tags; do
+            while IFS= read -r tag; do
               if [ "$tag" = "latest" ]; then continue; fi # Skip the 'latest' tag itself
               
               # Optimization: Only fetch digest for tags that look like SHAs
               # This assumes SHA-like tags are typically 7 to 40 hex characters long
               if [[ "$tag" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
-                digest=$(fetch_digest "$image_path" "$tag")
+                digest="" # Initialize for inner call
+                if ! digest=$(fetch_digest "$image_path" "$tag"); then
+                    echo "Warning: Failed to fetch digest for tag $tag. Skipping this tag."
+                    continue
+                fi
                 if [ "$digest" = "$digest_latest" ]; then
                   matching_sha="$tag" # Found a match
                   break # Exit the inner loop, no need to check further tags
                 fi
               fi
-            done
+            done <<< "$tags_output" # Feed tags_output into the while loop
 
             if [ -z "$matching_sha" ]; then
               echo "Warning: No matching SHA tag found for digest $digest_latest on $repo. This might be expected if 'latest' is a new, un-SHA-tagged build. Skipping update for this image."
