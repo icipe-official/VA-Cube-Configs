@@ -22,6 +22,34 @@ spec:
       labels:
         io.kompose.service: api
     spec:
+      initContainers:
+        - name: run-db-migrations
+          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
+          command: ["npm", "run", "migrations:runallprod"]
+          env:
+            - name: DB_ENCRYPT_CONNECTION
+              value: "true"
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_DB_UAT
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_HOST_UAT
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_PASSWORD_UAT
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_USER_UAT
+          imagePullPolicy: IfNotPresent
       containers:
         - name: api  # <-- Ensure the container name is correctly set here
           image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
