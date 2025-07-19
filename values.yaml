@@ -16,7 +16,7 @@ images:
     tag: latest
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: 6d0fabc4
+    tag: bbf614a1
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
