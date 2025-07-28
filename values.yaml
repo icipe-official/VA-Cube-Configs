@@ -10,13 +10,13 @@ images:
     tag: latest
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: d258da74
+    tag: 85cecb18
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: latest
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: d258da74
+    tag: 85cecb18
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
