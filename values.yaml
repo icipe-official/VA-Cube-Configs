@@ -1,7 +1,7 @@
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: bf597883
+    tag: a3405656
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -10,13 +10,13 @@ images:
     tag: latest
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: 85cecb18
+    tag: a3405656
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: latest
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: 85cecb18
+    tag: a3405656
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
