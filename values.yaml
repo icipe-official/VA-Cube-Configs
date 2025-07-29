@@ -13,10 +13,10 @@ images:
     tag: 9720c2ee
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
-    tag: latest
+    tag: f331f113
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: 48a44656
+    tag: f331f113
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
