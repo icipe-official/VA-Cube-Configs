@@ -20,3 +20,5 @@ images:
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
+  nginx:
+    tag: eb6a603f
