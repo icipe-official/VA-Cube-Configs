@@ -7,7 +7,7 @@ images:
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: latest
+    tag: 9a08c85a
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
     tag: 9720c2ee
