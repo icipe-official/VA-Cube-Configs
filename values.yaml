@@ -10,13 +10,13 @@ images:
     tag: 9a08c85a
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: 9720c2ee
+    tag: 820b50d8
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: f331f113
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: 245ec9cc
+    tag: 820b50d8
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
