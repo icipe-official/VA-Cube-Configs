@@ -6,7 +6,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2  # This removes "/vector-api" from the URL
     nginx.ingress.kubernetes.io/proxy-body-size: "200m"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
 
 spec:
