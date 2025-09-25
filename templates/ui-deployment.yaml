@@ -25,6 +25,11 @@ spec:
             - node
             - server.js
           env:
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: TOKEN_KEY_UAT
             - name: API_URL
               value: api
             - name: AUTH0_AUDIENCE
