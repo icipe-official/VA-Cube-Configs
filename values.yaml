@@ -10,7 +10,7 @@ images:
     tag: 52fb5ebd
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: 820b50d8
+    tag: 2bf0b6c4
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: f331f113
