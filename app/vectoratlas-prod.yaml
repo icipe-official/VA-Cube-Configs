@@ -1,21 +1,20 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vectoratlas
+  name: vectoratlas-prod
   namespace: argocd
 spec:
   destination:
-    namespace: vectoratlas
+    namespace: vectoratlas-prod
     server: https://kubernetes.default.svc
   project: default
   source:
-    helm:
-      releaseName: vectoratlas0.1
-    path: "."
     repoURL: https://github.com/icipe-official/VA-Cube-Configs
     targetRevision: main
+    path: environments/prod
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
     - CreateNamespace=true

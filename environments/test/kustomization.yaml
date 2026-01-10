@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../base
+
+images:
+- name: ghcr.io/icipe-official/api
+  newTag: latest
+- name: ghcr.io/icipe-official/db-migrations
+  newTag: latest
+- name: ghcr.io/icipe-official/help
+  newTag: latest
+- name: ghcr.io/icipe-official/ingestionapi
+  newTag: latest
+- name: ghcr.io/icipe-official/tileserver
+  newTag: latest
+- name: ghcr.io/icipe-official/ui
+  newTag: 6d0fabc4
+- name: ghcr.io/umami-software/umami
+  newName: ghcr.io/icipe-official/umami
+  newTag: latest
