@@ -16,7 +16,7 @@ images:
     tag: f331f113
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: 003dc970
+    tag: c8661e29
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
