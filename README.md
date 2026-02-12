@@ -1,7 +1,7 @@
 # VA‑Cube‑Configs
 
 This repository contains the **Helm chart for the Vector Atlas platform** and related configuration templates.  
-It is designed to be deployed in a Kubernetes cluster and managed using GitOps tools such as **ArgoCD**.
+It is designed to be deployed in a Kubernetes cluster and managed using GitOps style with **ArgoCD**.
 
 ---
 
