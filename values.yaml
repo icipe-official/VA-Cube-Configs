@@ -23,6 +23,8 @@ images:
   nginx:
     tag: eb6a603f
 workload-identity-webhook:
+  azureTenantID: "dummy"                     # temporary placeholder
   azureTenantIDFromSecret:
     name: azure-workload-identity
     key: azure-tenant-id
+
