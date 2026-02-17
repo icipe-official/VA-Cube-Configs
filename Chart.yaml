@@ -7,6 +7,6 @@ keywords:
 sources: []
 dependencies:
   - name: workload-identity-webhook
-    version: "0.13.0"
-    repository: "https://azure.github.io/azure-workload-identity/charts"
+    version: 1.5.1
+    repository: https://azure.github.io/azure-workload-identity/charts
 

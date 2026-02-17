@@ -22,3 +22,7 @@ images:
     tag: latest
   nginx:
     tag: eb6a603f
+workload-identity-webhook:
+  azureTenantIDFromSecret:
+    name: azure-workload-identity
+    key: azure-tenant-id
