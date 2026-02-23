@@ -16,15 +16,14 @@ images:
     tag: f331f113
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: c970f5e0
+    tag: "472174e7"
   umami:
     repository: ghcr.io/icipe-official/umami
     tag: latest
   nginx:
     tag: eb6a603f
 workload-identity-webhook:
-  azureTenantID: "dummy"                     # temporary placeholder
+  azureTenantID: "dummy" # temporary placeholder
   azureTenantIDFromSecret:
     name: azure-workload-identity
     key: azure-tenant-id
-
