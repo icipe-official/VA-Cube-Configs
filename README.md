@@ -32,7 +32,7 @@ Configuration values can be customized in `values.yaml` to adapt the chart to yo
 - First-time deployment should use the **App of Apps pattern** by applying `bootstrap-app.yaml`.  
 - Once bootstrapped, ArgoCD will track the application manifests (e.g., `app/vectoratlas.yaml`) directly from Git.  
 - All updates to the chart or app manifest should be done via Git; ArgoCD will automatically sync changes.  
-- **Note:** The ingress controller for the platform domain is **not included** in this repository and must be installed separately.
+- **Note:** The gateway for the platform domain is **not included** in this repository and in infra gitops repo.
 
 ---
 
