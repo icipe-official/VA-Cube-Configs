@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: tileserver
+  namespace: vectoratlas
+spec:
+  parentRefs:
+    - name: vectoratlas-gateway
+      namespace: vectoratlas
+      sectionName: https          # listener on your Gateway
+  hostnames:
+    - test.vectoratlas.icipe.org
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /data/         # best Gateway API equivalent of /data/.+\.(png|pbf)$
+      backendRefs:
+        - name: tileserver
+          port: 80

@@ -10,6 +10,6 @@ spec:
     io.kompose.service: ui
   ports:
     - port: 80
-      targetPort: 3000  # Change to the port your app is running on
+      targetPort: 3000
       protocol: TCP
   type: ClusterIP
