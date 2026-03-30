@@ -62,7 +62,7 @@ spec:
                   name: uat-secrets
                   key: ANALYTICS_ADMIN_PASSWORD_UAT
             - name: ANALYTICS_API_URL
-              value: "http://analytics:3000"
+              value: "http://analytics:3000/api"
             - name: AUTH0_AUDIENCE
               valueFrom:
                 secretKeyRef:
@@ -181,7 +181,7 @@ spec:
                   name: uat-secrets
                   key: IMAP_SERVER_UAT
             - name: NEXT_PUBLIC_ANALYTICS_ID
-              value: '"2b3b6da0-3e75-4d9e-be86-d588496a174e"'
+              value: "2b3b6da0-3e75-4d9e-be86-d588496a174e"
             - name: NEXT_PUBLIC_AUTH_ENDPOINT
               value: http://api:3001/auth/token
             - name: TOKEN_KEY
