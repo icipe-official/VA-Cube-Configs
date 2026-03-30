@@ -19,7 +19,7 @@ images:
     tag: "1b3f4cde"
   umami:
     repository: ghcr.io/umami-software/umami
-    tag: postgresql-v2.20
+    tag: postgresql-v1.40
   nginx:
     tag: eb6a603f
 workload-identity-webhook:
