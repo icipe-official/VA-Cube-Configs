@@ -18,8 +18,8 @@ images:
     repository: ghcr.io/icipe-official/ui
     tag: "1b3f4cde"
   umami:
-    repository: ghcr.io/icipe-official/umami
-    tag: latest
+    repository: ghcr.io/umami-software/umami
+    tag: postgresql-v2.20
   nginx:
     tag: eb6a603f
 workload-identity-webhook:
