@@ -5,11 +5,11 @@ metadata:
   namespace: vectoratlas
 spec:
   hostnames:
-  - test.vectoratlas.icipe.org
+  - vectoratlas.icipe.org
   parentRefs:
   - group: gateway.networking.k8s.io
     kind: Gateway
-    name: vectoratlas-gateway
+    name: vectoratlasicipe-gateway
     namespace: vectoratlas
     sectionName: https
   rules:

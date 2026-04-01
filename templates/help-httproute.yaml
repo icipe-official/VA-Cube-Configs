@@ -5,11 +5,11 @@ metadata:
   namespace: vectoratlas
 spec:
   parentRefs:
-    - name: vectoratlas-gateway
+    - name: vectoratlasicipe-gateway
       namespace: vectoratlas
       sectionName: https               # matches the listener name on your Gateway
   hostnames:
-    - test.vectoratlas.icipe.org
+    - vectoratlas.icipe.org
   rules:
     - matches:
         - path:
