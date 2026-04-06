@@ -16,7 +16,7 @@ images:
     tag: f331f113
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "1122dace"
+    tag: "5b055f4c"
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
