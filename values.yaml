@@ -13,7 +13,7 @@ images:
     tag: c4d82c87
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
-    tag: f331f113
+    tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
     tag: "f1cb28be"
