@@ -22,6 +22,9 @@ images:
     tag: postgresql-v1.40
   nginx:
     tag: eb6a603f
+  redis:
+    repository: redis
+    tag: "7"
 workload-identity-webhook:
   azureTenantID: "dummy" # temporary placeholder
   azureTenantIDFromSecret:
