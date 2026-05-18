@@ -7,7 +7,7 @@ images:
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: 52fb5ebd
+    tag: bedeb870
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
     tag: "4719fb76"
@@ -16,7 +16,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "0a808819"
+    tag: "bedeb870"
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
