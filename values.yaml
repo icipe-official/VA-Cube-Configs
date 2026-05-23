@@ -10,7 +10,7 @@ images:
     tag: bedeb870
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "e4f7deda"
+    tag: "044adb97"
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
