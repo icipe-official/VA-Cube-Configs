@@ -116,15 +116,9 @@ spec:
                   name: uat-secrets
                   key: DATACITE_USER_UAT
             - name: DATA_INGESTION_URL
-              valueFrom:
-                secretKeyRef:
-                  name: uat-secrets
-                  key: DATA_INGESTION_URL_UAT
+              value: "http://python-backend:8000/upload/data/v2/"
             - name: DATA_VALIDATION_URL
-              valueFrom:
-                secretKeyRef:
-                  name: uat-secrets
-                  key: DATA_VALIDATION_URL_UAT
+              value: "http://python-backend:8000/validate/data/v2/"
             - name: DOI_ENVIRONMENT
               valueFrom:
                 secretKeyRef:
@@ -249,4 +243,3 @@ spec:
             claimName: pvc-data
       imagePullSecrets:
         - name: ghcr-login-secret
-
