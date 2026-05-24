@@ -1,7 +1,7 @@
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: 8b55ea65
+    tag: bc5cfc42
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -16,7 +16,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "33cb29b5"
+    tag: "bc5cfc42"
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
