@@ -10,13 +10,13 @@ images:
     tag: bedeb870
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "27b254b3"
+    tag: "b55d91ff"
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "27b254b3"
+    tag: "b55d91ff"
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
