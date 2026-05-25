@@ -66,7 +66,7 @@ spec:
               value: http://api:3001/auth/token
             - name: NEXT_PUBLIC_TOKEN_KEY
             - name: NEXT_PUBLIC_DATA_UPLOAD_CHUNK_SIZE
-              value: "1000"
+              value: "500"
           image: {{ .Values.images.ui.repository }}:{{ .Values.images.ui.tag }}
           name: ui
       restartPolicy: Always
