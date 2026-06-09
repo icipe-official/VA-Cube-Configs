@@ -206,7 +206,7 @@ spec:
                   name: uat-secrets
                   key: POSTGRES_USER_UAT
             - name: PUBLIC_FOLDER
-              value: /usr/src/app/dist
+              value: /usr/src/app/dist/public
             - name: REDIS_HOST
               value: redis
             - name: REDIS_PORT
