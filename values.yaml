@@ -1,7 +1,7 @@
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "dd98a588"
+    tag: "98da007c"
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
