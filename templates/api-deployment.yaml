@@ -225,6 +225,8 @@ spec:
               value: /data/
             - name: DATA_TEMPLATES_FOLDER
               value: /usr/src/app/dist/public/templates
+            - name: FULL_OCCURRENCE_DATA_FOLDER
+              value: /usr/src/app/dist/public/occurrence_data
           volumeMounts:
             - mountPath: /usr/src/app/dist/public
               name: api-claim0
