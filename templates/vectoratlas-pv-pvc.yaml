@@ -41,6 +41,20 @@ spec:
     path: /opt/dmmg-kubernetes-test/vectoratlas/data
   persistentVolumeReclaimPolicy: Retain
 
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-occurrencedata
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /opt/dmmg-kubernetes-test/vectoratlas/occurrence_data
+  persistentVolumeReclaimPolicy: Retain
+
 # PersistentVolumeClaims
 
 ---
@@ -81,3 +95,17 @@ spec:
     requests:
       storage: 1Gi
   volumeName: pv-data
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-occurrencedata
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-occurrencedata
+
