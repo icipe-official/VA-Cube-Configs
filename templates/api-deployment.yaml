@@ -226,7 +226,7 @@ spec:
             - name: DATA_TEMPLATES_FOLDER
               value: /usr/src/app/dist/public/templates
             - name: FULL_OCCURRENCE_DATA_FOLDER
-              value: /usr/src/app/dist/public/occurrence_data
+              value: /occurrence_data
           volumeMounts:
             - mountPath: /usr/src/app/dist/public
               name: api-claim0
@@ -234,6 +234,8 @@ spec:
               name: api-claim1
             - mountPath: /data
               name: api-claim2
+            - mountPath: /occurrence_data
+              name: occurrencegeojob-claim
       restartPolicy: Always
       volumes:
         - name: api-claim0
@@ -245,5 +247,8 @@ spec:
         - name: api-claim2
           persistentVolumeClaim:
             claimName: pvc-data
+        - name: occurrencegeojob-claim
+          persistentVolumeClaim:
+            claimName: pvc-occurrencedata
       imagePullSecrets:
         - name: ghcr-login-secret
