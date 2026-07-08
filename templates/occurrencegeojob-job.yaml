@@ -9,6 +9,8 @@ spec:
       labels:
         azure.workload.identity/use: "true"
     spec:
+      securityContext:
+        runAsUser: 0
       serviceAccountName: azure-access-sa
       imagePullSecrets:
         - name: ghcr-login-secret
