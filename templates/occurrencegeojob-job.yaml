@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: occurrencegeojob
+spec:
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: azure-access-sa
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      restartPolicy: OnFailure
+      containers:
+        - name: occurrencegeojob
+          image: {{ .Values.images.occurrencegeojob.repository }}:{{ .Values.images.occurrencegeojob.tag }}
+          env:
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_DB_UAT
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_HOST_UAT
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_PASSWORD_UAT
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: uat-secrets
+                  key: POSTGRES_USER_UAT
+            - name: PGPORT
+              value: "5432"
+            - name: LOGGER_LEVEL
+              value: debug
+            - name: LOGGER_OUTPUT
+              value: console
+            - name: TARGET_DIRECTORY
+              value: /home/app/app/.tmp
+            - name: STAGING_DIRECTORY
+              value: /home/app/app/.tmp/staging
+          volumeMounts:
+            - mountPath: /home/app/app/.tmp
+              name: occurrencegeojob-volume
+      volumes:
+        - name: occurrencegeojob-volume
+          persistentVolumeClaim:
+            claimName: pvc-occurrencedata
+
