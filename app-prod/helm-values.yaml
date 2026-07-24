@@ -8,8 +8,8 @@ global:
     name: uat-secrets
   imagePullSecrets:
     - name: ghcr-login-secret
-  # serviceAccount:
-  #   name: azure-access-sa
+  serviceAccount:
+    name: ""
 
 # Ingress Configuration
 ingress:
@@ -171,8 +171,8 @@ deployments:
     replicaCount: 1
     strategy:
       type: RollingUpdate
-    # serviceAccountName: ""
-    # azureWorkloadIdentity: true
+    serviceAccountName: ""
+    azureWorkloadIdentity: false
     env:
       DB_ENCRYPT_CONNECTION: "false"
       POSTGRES_DB: ""
@@ -297,7 +297,6 @@ deployments:
     enabled: true
     backoffLimit: 4
     restartPolicy: OnFailure
-    serviceAccountName: azure-access-sa
     securityContext:
       runAsUser: 0
     env:
