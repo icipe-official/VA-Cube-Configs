@@ -12,11 +12,11 @@ spec:
   source:
     helm:
       releaseName: vectoratlas-prod
-      valueFiles: ["app-prod/values-prod.yaml"]
+      valueFiles: ["app-prod/helm-values.yaml"]
     path: "."
     repoURL: https://github.com/icipe-official/VA-Cube-Configs
     targetRevision: main
   syncPolicy:
     automated: {}
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
