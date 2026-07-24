@@ -5,11 +5,16 @@ metadata:
     kompose.cmd: kompose convert -f docker-compose.uat.yml -c
     kompose.version: 1.35.0 (9532ceef3)
   labels:
-    io.kompose.service: python-backend
+    {{- if .Values.services.pythonBackend.labels }}
+    {{- .Values.services.pythonBackend.labels | toYaml | nindent 4 }}
+    {{- end }}
   name: python-backend
 spec:
   ports:
-    - port: 8000
-      targetPort: 8000
+    - port: {{ .Values.services.pythonBackend.port }}
+      targetPort: {{ .Values.services.pythonBackend.targetPort }}
   selector:
     io.kompose.service: python-backend
+  {{- if .Values.services.pythonBackend.type }}
+  type: {{ .Values.services.pythonBackend.type }}
+  {{- end }}

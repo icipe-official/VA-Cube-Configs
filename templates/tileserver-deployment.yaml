@@ -8,12 +8,12 @@ metadata:
     io.kompose.service: tileserver
   name: tileserver
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployments.tileserver.replicaCount }}
   selector:
     matchLabels:
       io.kompose.service: tileserver
   strategy:
-    type: Recreate
+    type: {{ .Values.deployments.tileserver.strategy.type }}
   template:
     metadata:
       annotations:
@@ -33,5 +33,6 @@ spec:
         - name: tileserver-claim0
           persistentVolumeClaim:
             claimName: pvc-data
-      imagePullSecrets:
-        - name: ghcr-login-secret
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}

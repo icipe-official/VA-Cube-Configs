@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: analytics
   name: analytics
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployments.analytics.replicaCount }}
   selector:
     matchLabels:
       io.kompose.service: analytics
@@ -24,21 +24,25 @@ spec:
         - name: analytics
           image: {{ .Values.images.umami.repository }}:{{ .Values.images.umami.tag }}
           ports:
-            - containerPort: 3000  # Adjust this based on your container's exposed port
+            - containerPort: {{ .Values.deployments.analytics.containerPort }}
           env:
             - name: BASE_PATH
-              value: /analytics
+              value: {{ .Values.deployments.analytics.env.BASE_PATH | quote }}
             - name: CLIENT_IP_HEADER
-              value: x-original-ip
+              value: {{ .Values.deployments.analytics.env.CLIENT_IP_HEADER | quote }}
             - name: DATABASE_TYPE
-              value: postgresql
+              value: {{ .Values.deployments.analytics.env.DATABASE_TYPE | quote }}
             - name: DATABASE_URL
+              {{- if .Values.deployments.analytics.env.DATABASE_URL }}
+              value: {{ .Values.deployments.analytics.env.DATABASE_URL | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: DATABASE_URL_ANALYTICS_UAT
                   optional: false
+              {{- end }}
       restartPolicy: Always
-      imagePullSecrets:
-        - name: ghcr-login-secret
-
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}

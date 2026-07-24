@@ -1,18 +1,22 @@
-# PersistentVolumes
 
+{{- if .Values.storage.pvs.api.enabled | default false }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: pv-api
 spec:
   capacity:
-    storage: 10Mi
-  accessModes:
-    - ReadWriteOnce
+    storage: {{ .Values.storage.pvs.api.size }}
+  accessModes: {{ .Values.storage.pvs.api.accessModes | toYaml | nindent 4 }}
+  {{- if .Values.storage.pvs.api.storageClassName }}
+  storageClassName: {{ .Values.storage.pvs.api.storageClassName | quote }}
+  {{- end }}
   hostPath:
-    path: /opt/dmmg-kubernetes-test/vectoratlas/api
-  persistentVolumeReclaimPolicy: Retain
+    path: {{ .Values.storage.pvs.api.path | quote }}
+  persistentVolumeReclaimPolicy: {{ .Values.storage.pvs.api.reclaimPolicy | quote }}
+{{- end }}
 
+{{- if .Values.storage.pvs.public.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -20,13 +24,17 @@ metadata:
   name: pv-public
 spec:
   capacity:
-    storage: 10Mi
-  accessModes:
-    - ReadWriteOnce
+    storage: {{ .Values.storage.pvs.public.size }}
+  accessModes: {{ .Values.storage.pvs.public.accessModes | toYaml | nindent 4 }}
+  {{- if .Values.storage.pvs.public.storageClassName }}
+  storageClassName: {{ .Values.storage.pvs.public.storageClassName | quote }}
+  {{- end }}
   hostPath:
-    path: /opt/dmmg-kubernetes-test/vectoratlas/public
-  persistentVolumeReclaimPolicy: Retain
+    path: {{ .Values.storage.pvs.public.path | quote }}
+  persistentVolumeReclaimPolicy: {{ .Values.storage.pvs.public.reclaimPolicy | quote }}
+{{- end }}
 
+{{- if .Values.storage.pvs.data.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -34,13 +42,17 @@ metadata:
   name: pv-data
 spec:
   capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
+    storage: {{ .Values.storage.pvs.data.size }}
+  accessModes: {{ .Values.storage.pvs.data.accessModes | toYaml | nindent 4 }}
+  {{- if .Values.storage.pvs.data.storageClassName }}
+  storageClassName: {{ .Values.storage.pvs.data.storageClassName | quote }}
+  {{- end }}
   hostPath:
-    path: /opt/dmmg-kubernetes-test/vectoratlas/data
-  persistentVolumeReclaimPolicy: Retain
+    path: {{ .Values.storage.pvs.data.path | quote }}
+  persistentVolumeReclaimPolicy: {{ .Values.storage.pvs.data.reclaimPolicy | quote }}
+{{- end }}
 
+{{- if .Values.storage.pvs.occurrencedata.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -48,64 +60,91 @@ metadata:
   name: pv-occurrencedata
 spec:
   capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
+    storage: {{ .Values.storage.pvs.occurrencedata.size }}
+  accessModes: {{ .Values.storage.pvs.occurrencedata.accessModes | toYaml | nindent 4 }}
+  {{- if .Values.storage.pvs.occurrencedata.storageClassName }}
+  storageClassName: {{ .Values.storage.pvs.occurrencedata.storageClassName | quote }}
+  {{- end }}
   hostPath:
-    path: /opt/dmmg-kubernetes-test/vectoratlas/occurrence_data
-  persistentVolumeReclaimPolicy: Retain
+    path: {{ .Values.storage.pvs.occurrencedata.path | quote }}
+  persistentVolumeReclaimPolicy: {{ .Values.storage.pvs.occurrencedata.reclaimPolicy | quote }}
+{{- end }}
 
 # PersistentVolumeClaims
 
+{{- if .Values.storage.pvcs.api.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-api
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: {{ .Values.storage.pvcs.api.accessModes | toYaml | nindent 4 }}
   resources:
     requests:
-      storage: 10Mi
+      storage: {{ .Values.storage.pvcs.api.storageSize }}
+  {{- if .Values.storage.pvcs.api.storageClassName }}
+  storageClassName: {{ .Values.storage.pvcs.api.storageClassName | quote }}
+  {{- end }}
+  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-api
+  {{- end }}
+{{- end }}
 
+{{- if .Values.storage.pvcs.public.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-public
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: {{ .Values.storage.pvcs.public.accessModes | toYaml | nindent 4 }}
   resources:
     requests:
-      storage: 10Mi
+      storage: {{ .Values.storage.pvcs.public.storageSize }}
+  {{- if .Values.storage.pvcs.public.storageClassName }}
+  storageClassName: {{ .Values.storage.pvcs.public.storageClassName | quote }}
+  {{- end }}
+  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-public
+  {{- end }}
+{{- end }}
 
+{{- if .Values.storage.pvcs.data.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-data
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: {{ .Values.storage.pvcs.data.accessModes | toYaml | nindent 4 }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcs.data.storageSize }}
+  {{- if .Values.storage.pvcs.data.storageClassName }}
+  storageClassName: {{ .Values.storage.pvcs.data.storageClassName | quote }}
+  {{- end }}
+  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-data
+  {{- end }}
+{{- end }}
 
+{{- if .Values.storage.pvcs.occurrencedata.enabled | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-occurrencedata
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: {{ .Values.storage.pvcs.occurrencedata.accessModes | toYaml | nindent 4 }}
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.pvcs.occurrencedata.storageSize }}
+  {{- if .Values.storage.pvcs.occurrencedata.storageClassName }}
+  storageClassName: {{ .Values.storage.pvcs.occurrencedata.storageClassName | quote }}
+  {{- end }}
+  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-occurrencedata
+  {{- end }}
+{{- end }}
 

@@ -1,70 +1,67 @@
-# =============================================================================
-# Global Configuration
-# =============================================================================
+# Production Environment Configuration
+# Overrides for values.yaml
+# Disable PVs (use cloud storage classes) and adjust sizes for production
+
 global:
   namespace: vectoratlas
   secrets:
-    name: uat-secrets
+    name: prod-secrets # Different secrets for production
   imagePullSecrets:
     - name: ghcr-login-secret
   serviceAccount:
     name: azure-access-sa
 
-# =============================================================================
-# Ingress / Gateway Configuration
-# =============================================================================
+# Ingress Configuration
 ingress:
   gateway:
-    provider: traefik
-    name: vectoratlasicipe-gateway
-    namespace: vectoratlas
+    provider: envoy
+    name: envoy-gateway
+    namespace: default
     section: https
   routes:
     ui:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /
       stripPrefix: ""
       backend:
         service: ui
         port: 80
     api:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /vector-api
       stripPrefix: /
       backend:
         service: api
         port: 3001
     help:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /help
       stripPrefix: /
       backend:
         service: help
         port: 80
     ingestion:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /ingestion-api
       stripPrefix: /
       backend:
         service: python-backend
         port: 8000
     tileserver:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /data/
       backend:
         service: tileserver
         port: 80
     malariaatlas:
-      hostname: vectoratlas.icipe.org
+      hostname: 134.112.16.22.nip.io
       path: /map-wms
       rewritePath: /geoserver/Interventions/wms
       backend:
         service: malariaatlas-service
         port: 443
 
-# =============================================================================
 # Service Configuration
-# =============================================================================
 services:
   api:
     port: 3001
@@ -114,40 +111,37 @@ services:
     port: 443
     type: ExternalName
 
-# =============================================================================
-# Storage Configuration
-# =============================================================================
+# Storage - Cloud-managed (PVs disabled, PVCs use storageClass)
 storage:
   pvs:
     api:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/api
       size: 10Mi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     public:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/public
       size: 10Mi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     data:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/data
       size: 1Gi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     occurrencedata:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/occurrence_data
       size: 1Gi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
-
   pvcs:
     api:
       enabled: true
@@ -170,19 +164,17 @@ storage:
       accessModes: [ReadWriteOnce]
       storageClassName: ""
 
-# =============================================================================
-# Deployment Configuration
-# =============================================================================
+# Deployment Configuration - Production may have different replica counts
 deployments:
   api:
     enabled: true
-    replicaCount: 2
+    replicaCount: 1
     strategy:
       type: RollingUpdate
     serviceAccountName: ""
     azureWorkloadIdentity: true
     env:
-      DB_ENCRYPT_CONNECTION: "true"
+      DB_ENCRYPT_CONNECTION: "false"
       POSTGRES_DB: ""
       POSTGRES_HOST: ""
       POSTGRES_PASSWORD: ""
@@ -255,7 +247,7 @@ deployments:
 
   ui:
     enabled: true
-    replicaCount: 2
+    replicaCount: 1
     env:
       TOKEN_KEY: ""
       API_URL: "api"
@@ -314,7 +306,7 @@ deployments:
       PGPASSWORD: ""
       PGUSER: ""
       PGPORT: "5432"
-      LOGGER_LEVEL: debug
+      LOGGER_LEVEL: info # Less verbose in production
       LOGGER_OUTPUT: console
       TARGET_DIRECTORY: /home/app/app/.tmp
       STAGING_DIRECTORY: /home/app/app/.tmp/staging
@@ -323,13 +315,11 @@ deployments:
         pvcName: pvc-occurrencedata
         mountPath: /home/app/app/.tmp
 
-# =============================================================================
-# Image Configuration
-# =============================================================================
+# Image Configuration - Production may use different tags
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "25e39f50"
+    tag: "25e39f50" # Should be updated to production tag
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -338,13 +328,13 @@ images:
     tag: df7c1f38
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "e729da8c"
+    tag: "e729da8c" # Should be updated to production tag
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "dc4f4a25"
+    tag: "dc4f4a25" # Should be updated to production tag
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
@@ -353,17 +343,15 @@ images:
     tag: eb6a603f
   occurrencegeojob:
     repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: 8bcf3398
+    tag: 8bcf3398 # Should be updated to production tag
   redis:
     repository: redis
     tag: "7"
 
-# =============================================================================
-# Workload Identity Webhook
-# =============================================================================
+# Workload Identity Webhook - Production Azure tenant
 workload-identity-webhook:
-  enabled: true
-  azureTenantID: "dummy"
+  enabled: false
+  azureTenantID: "dummy" # Replace with production Azure tenant ID
   azureTenantIDFromSecret:
     name: azure-workload-identity
     key: azure-tenant-id

@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: python-backend
   name: python-backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployments.pythonBackend.replicaCount }}
   selector:
     matchLabels:
       io.kompose.service: python-backend
@@ -23,36 +23,57 @@ spec:
       containers:
         - env:
             - name: POSTGRES_DB
+              {{- if .Values.deployments.pythonBackend.env.POSTGRES_DB }}
+              value: {{ .Values.deployments.pythonBackend.env.POSTGRES_DB | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_DB_UAT
                   optional: false
+              {{- end }}
             - name: POSTGRES_HOST
+              {{- if .Values.deployments.pythonBackend.env.POSTGRES_HOST }}
+              value: {{ .Values.deployments.pythonBackend.env.POSTGRES_HOST | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_HOST_UAT
                   optional: false
+              {{- end }}
             - name: POSTGRES_PASSWORD
+              {{- if .Values.deployments.pythonBackend.env.POSTGRES_PASSWORD }}
+              value: {{ .Values.deployments.pythonBackend.env.POSTGRES_PASSWORD | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_PASSWORD_UAT
                   optional: false
+              {{- end }}
             - name: POSTGRES_USER
+              {{- if .Values.deployments.pythonBackend.env.POSTGRES_USER }}
+              value: {{ .Values.deployments.pythonBackend.env.POSTGRES_USER | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_USER_UAT
                   optional: false
+              {{- end }}
             - name: POSTGRES_PORT
+              {{- if .Values.deployments.pythonBackend.env.POSTGRES_PORT }}
+              value: {{ .Values.deployments.pythonBackend.env.POSTGRES_PORT | quote }}
+              {{- else }}
               value: "5432"
+              {{- end }}
           image: {{ .Values.images.ingestionapi.repository }}:{{ .Values.images.ingestionapi.tag }}
           name: python-backend
           ports:
             - containerPort: 8000
               protocol: TCP
       restartPolicy: Always
-      imagePullSecrets:
-        - name: ghcr-login-secret
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}

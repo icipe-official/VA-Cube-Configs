@@ -2,14 +2,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ui
-  namespace: vectoratlas
+  namespace: {{ .Values.global.namespace }}
   labels:
-    io.kompose.service: ui
+    {{- if .Values.services.ui.labels }}
+    {{- .Values.services.ui.labels | toYaml | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     io.kompose.service: ui
   ports:
-    - port: 80
-      targetPort: 3000
+    - port: {{ .Values.services.ui.port }}
+      targetPort: {{ .Values.services.ui.targetPort }}
       protocol: TCP
-  type: ClusterIP
+  {{- if .Values.services.ui.type }}
+  type: {{ .Values.services.ui.type }}
+  {{- end }}

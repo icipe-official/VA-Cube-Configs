@@ -3,52 +3,69 @@ kind: Job
 metadata:
   name: occurrencegeojob
 spec:
-  backoffLimit: 4
+  backoffLimit: {{ .Values.deployments.occurrencegeojob.backoffLimit }}
   template:
     metadata:
       labels:
         azure.workload.identity/use: "true"
     spec:
       securityContext:
-        runAsUser: 0
-      serviceAccountName: azure-access-sa
-      imagePullSecrets:
-        - name: ghcr-login-secret
-      restartPolicy: OnFailure
+        runAsUser: {{ .Values.deployments.occurrencegeojob.securityContext.runAsUser }}
+      serviceAccountName: {{ .Values.deployments.occurrencegeojob.serviceAccountName }}
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      restartPolicy: {{ .Values.deployments.occurrencegeojob.restartPolicy }}
       containers:
         - name: occurrencegeojob
           image: {{ .Values.images.occurrencegeojob.repository }}:{{ .Values.images.occurrencegeojob.tag }}
           env:
             - name: PGDATABASE
+              {{- if .Values.deployments.occurrencegeojob.env.PGDATABASE }}
+              value: {{ .Values.deployments.occurrencegeojob.env.PGDATABASE | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_DB_UAT
+              {{- end }}
             - name: PGHOST
+              {{- if .Values.deployments.occurrencegeojob.env.PGHOST }}
+              value: {{ .Values.deployments.occurrencegeojob.env.PGHOST | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_HOST_UAT
+              {{- end }}
             - name: PGPASSWORD
+              {{- if .Values.deployments.occurrencegeojob.env.PGPASSWORD }}
+              value: {{ .Values.deployments.occurrencegeojob.env.PGPASSWORD | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_PASSWORD_UAT
+              {{- end }}
             - name: PGUSER
+              {{- if .Values.deployments.occurrencegeojob.env.PGUSER }}
+              value: {{ .Values.deployments.occurrencegeojob.env.PGUSER | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: uat-secrets
+                  name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_USER_UAT
+              {{- end }}
             - name: PGPORT
-              value: "5432"
+              value: {{ .Values.deployments.occurrencegeojob.env.PGPORT | quote }}
             - name: LOGGER_LEVEL
-              value: debug
+              value: {{ .Values.deployments.occurrencegeojob.env.LOGGER_LEVEL | quote }}
             - name: LOGGER_OUTPUT
-              value: console
+              value: {{ .Values.deployments.occurrencegeojob.env.LOGGER_OUTPUT | quote }}
             - name: TARGET_DIRECTORY
-              value: /home/app/app/.tmp
+              value: {{ .Values.deployments.occurrencegeojob.env.TARGET_DIRECTORY | quote }}
             - name: STAGING_DIRECTORY
-              value: /home/app/app/.tmp/staging
+              value: {{ .Values.deployments.occurrencegeojob.env.STAGING_DIRECTORY | quote }}
           volumeMounts:
             - mountPath: /home/app/app/.tmp
               name: occurrencegeojob-volume
@@ -56,4 +73,3 @@ spec:
         - name: occurrencegeojob-volume
           persistentVolumeClaim:
             claimName: pvc-occurrencedata
-

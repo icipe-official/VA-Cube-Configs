@@ -2,10 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: analytics
-  namespace: vectoratlas
+  namespace: {{ .Values.global.namespace }}
 spec:
   selector:
-    io.kompose.service: analytics  # This should match the label from Deployment
+    {{- if .Values.services.analytics.labels }}
+    {{- .Values.services.analytics.labels | toYaml | nindent 4 }}
+    {{- end }}
   ports:
-    - port: 3000
-      targetPort: 3000  # This matches the container port
+    - port: {{ .Values.services.analytics.port }}
+      targetPort: {{ .Values.services.analytics.targetPort }}

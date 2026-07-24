@@ -1,25 +1,25 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: test-vectoratlas-route
-  namespace: vectoratlas
+  name: {{ .Chart.Name | lower }}-ui-route
+  namespace: {{ .Values.global.namespace }}
 spec:
   hostnames:
-  - vectoratlas.icipe.org
+    - {{ .Values.ingress.routes.ui.hostname | quote }}
   parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: vectoratlasicipe-gateway
-    namespace: vectoratlas
-    sectionName: https
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.ingress.gateway.name }}
+      namespace: {{ .Values.ingress.gateway.namespace }}
+      sectionName: {{ .Values.ingress.gateway.section }}
   rules:
-  - backendRefs:
-    - group: ""
-      kind: Service
-      name: ui
-      port: 80
-      weight: 1
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ .Values.ingress.routes.ui.backend.service }}
+          port: {{ .Values.ingress.routes.ui.backend.port }}
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.ingress.routes.ui.path }}

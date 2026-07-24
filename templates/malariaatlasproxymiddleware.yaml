@@ -1,9 +1,11 @@
+{{- if eq .Values.ingress.gateway.provider "traefik" }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: malariaatlas-host-headers
-  namespace: vectoratlas
+  namespace: {{ .Values.global.namespace }}
 spec:
   headers:
     customRequestHeaders:
       Host: data.malariaatlas.org
+{{- end }}

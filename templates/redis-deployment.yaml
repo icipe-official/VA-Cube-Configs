@@ -5,12 +5,12 @@ metadata:
     io.kompose.service: redis
   name: redis
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployments.redis.replicaCount }}
   selector:
     matchLabels:
       io.kompose.service: redis
   strategy:
-    type: Recreate
+    type: {{ .Values.deployments.redis.strategy.type }}
   template:
     metadata:
       labels:

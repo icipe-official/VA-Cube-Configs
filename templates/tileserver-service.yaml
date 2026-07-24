@@ -2,14 +2,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: tileserver
-  namespace: vectoratlas  # Replace with your desired namespace
+  namespace: {{ .Values.global.namespace }}
   labels:
-    service: tileserver
+    {{- if .Values.services.tileserver.labels }}
+    {{- .Values.services.tileserver.labels | toYaml | nindent 4 }}
+    {{- end }}
 spec:
   selector:
-    io.kompose.service: tileserver  # This matches the label in the Deployment
+    io.kompose.service: tileserver
   ports:
     - protocol: TCP
-      port: 80  # Expose the service on port 80
-      targetPort: 80  # This matches the port the container is listening on
-  clusterIP: None  # This is for headless service (if you need direct Pod access without load balancing)
+      port: {{ .Values.services.tileserver.port }}
+      targetPort: {{ .Values.services.tileserver.targetPort }}
+  {{- if .Values.services.tileserver.clusterIP }}
+  clusterIP: {{ .Values.services.tileserver.clusterIP | quote }}
+  {{- end }}

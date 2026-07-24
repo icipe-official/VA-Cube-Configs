@@ -1,6 +1,7 @@
-# =============================================================================
-# Global Configuration
-# =============================================================================
+# Test Environment Configuration
+# Overrides for values.yaml
+# Contains all test-specific values that were previously hardcoded in templates
+
 global:
   namespace: vectoratlas
   secrets:
@@ -10,9 +11,7 @@ global:
   serviceAccount:
     name: azure-access-sa
 
-# =============================================================================
-# Ingress / Gateway Configuration
-# =============================================================================
+# Ingress Configuration
 ingress:
   gateway:
     provider: traefik
@@ -62,9 +61,7 @@ ingress:
         service: malariaatlas-service
         port: 443
 
-# =============================================================================
 # Service Configuration
-# =============================================================================
 services:
   api:
     port: 3001
@@ -114,40 +111,37 @@ services:
     port: 443
     type: ExternalName
 
-# =============================================================================
-# Storage Configuration
-# =============================================================================
+# Storage - Local hostPath for test K3s
 storage:
   pvs:
     api:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/api
       size: 10Mi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     public:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/public
       size: 10Mi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     data:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/data
       size: 1Gi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
     occurrencedata:
-      enabled: false
+      enabled: true
       path: /opt/dmmg-kubernetes-test/vectoratlas/occurrence_data
       size: 1Gi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
-
   pvcs:
     api:
       enabled: true
@@ -170,9 +164,7 @@ storage:
       accessModes: [ReadWriteOnce]
       storageClassName: ""
 
-# =============================================================================
 # Deployment Configuration
-# =============================================================================
 deployments:
   api:
     enabled: true
@@ -182,17 +174,24 @@ deployments:
     serviceAccountName: ""
     azureWorkloadIdentity: true
     env:
+      # Database
       DB_ENCRYPT_CONNECTION: "true"
       POSTGRES_DB: ""
       POSTGRES_HOST: ""
       POSTGRES_PASSWORD: ""
       POSTGRES_USER: ""
+
+      # External services - hardcoded test values
       ANALYTICS_API_URL: "http://analytics:3000/api"
       DATA_INGESTION_URL: "http://python-backend:8000/upload/data/v2/"
       DATA_VALIDATION_URL: "http://python-backend:8000/validate/data/v2/"
       NEXT_PUBLIC_AUTH_ENDPOINT: "http://api:3001/auth/token"
+
+      # Redis - hardcoded test values
       REDIS_HOST: "redis"
       REDIS_PORT: "6379"
+
+      # File paths - hardcoded test values
       CONFIG_FOLDER: /etc/vector-atlas/api
       OVERLAY_BLOB_FOLDER: /data/blobStore/
       PUBLIC_FOLDER: /usr/src/app/dist
@@ -201,30 +200,49 @@ deployments:
       FULL_OCCURRENCE_DATA_FOLDER: /occurrence_data
       SENT_EMAIL_FOLDER: ""
       TEMP_DIR: ""
+
+      # Auth
       ANALYTICS_ADMIN_PASSWORD: ""
       NEXT_PUBLIC_ANALYTICS_ID: "2b3b6da0-3e75-4d9e-be86-d588496a174e"
       TOKEN_KEY: ""
+
+      # Auth0
       AUTH0_AUDIENCE: ""
       AUTH0_CLIENT_ID: ""
       AUTH0_CLIENT_SECRET: ""
       AUTH0_ISSUER_URL: ""
+
+      # Azure
       AZURE_STORAGE_CONNECTION_STRING: ""
+
+      # Base URL
       BASE_URL: ""
+
+      # Datacite
       DATACITE_PASSWORD: ""
       DATACITE_PREFIX: ""
       DATACITE_URL: ""
       DATACITE_USER: ""
+
+      # DOI
       DOI_ENVIRONMENT: ""
       DOI_PUBLISHER: ""
       DOI_RESOLVER_BASE_URL: ""
+
+      # Email
       EMAIL_FROM: ""
       EMAIL_HOST: ""
       EMAIL_PASSWORD: ""
       EMAIL_PORT: ""
       EMAIL_SECURE: ""
+
+      # IMAP
       IMAP_PORT: ""
       IMAP_SERVER: ""
+
+      # File storage
       FILE_STORAGE_TYPE: ""
+
     volumes:
       - name: api-claim0
         pvcName: pvc-public
@@ -238,6 +256,7 @@ deployments:
       - name: occurrencegeojob-claim
         pvcName: pvc-occurrencedata
         mountPath: /occurrence_data
+
     initContainers:
       dbMigrations:
         image: ""
@@ -323,9 +342,7 @@ deployments:
         pvcName: pvc-occurrencedata
         mountPath: /home/app/app/.tmp
 
-# =============================================================================
 # Image Configuration
-# =============================================================================
 images:
   api:
     repository: ghcr.io/icipe-official/api
@@ -358,9 +375,7 @@ images:
     repository: redis
     tag: "7"
 
-# =============================================================================
 # Workload Identity Webhook
-# =============================================================================
 workload-identity-webhook:
   enabled: true
   azureTenantID: "dummy"

@@ -2,10 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: help
-  namespace: vectoratlas
+  namespace: {{ .Values.global.namespace }}
 spec:
   selector:
-    io.kompose.service: help  # Match the label from the Deployment
+    {{- if .Values.services.help.labels }}
+    {{- .Values.services.help.labels | toYaml | nindent 4 }}
+    {{- end }}
   ports:
-    - port: 80
-      targetPort: 80
+    - port: {{ .Values.services.help.port }}
+      targetPort: {{ .Values.services.help.targetPort }}
+  {{- if .Values.services.help.type }}
+  type: {{ .Values.services.help.type }}
+  {{- end }}

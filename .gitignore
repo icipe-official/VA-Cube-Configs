@@ -13,7 +13,6 @@ output/
 # Ignore rendered templates
 manifests/
 
-
-values.yaml
-values-*.yaml
+# NOTE: values.yaml and values-*.yaml are intentionally NOT ignored
+# as they are essential Helm chart configuration files
 

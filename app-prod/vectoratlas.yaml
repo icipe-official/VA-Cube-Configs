@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vectoratlas
+  name: vectoratlas-prod
   namespace: argocd
 spec:
   destination:
@@ -11,12 +11,12 @@ spec:
   project: default
   source:
     helm:
-      releaseName: vectoratlas0.1
-      valueFiles: ["app/helm-values.yaml"]
+      releaseName: vectoratlas-prod
+      valueFiles: ["app-prod/values-prod.yaml"]
     path: "."
     repoURL: https://github.com/icipe-official/VA-Cube-Configs
     targetRevision: main
   syncPolicy:
     automated: {}
     syncOptions:
-      - CreateNamespace=true
+    - CreateNamespace=true

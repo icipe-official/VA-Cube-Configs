@@ -1,34 +1,43 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: map-wms
-  namespace: vectoratlas
+  name: {{ .Chart.Name | lower }}-malariaatlas-route
+  namespace: {{ .Values.global.namespace }}
 spec:
-  parentRefs:
-    - name: vectoratlasicipe-gateway
-      namespace: vectoratlas
-      sectionName: https                  # listener name on your Gateway
   hostnames:
-    - vectoratlas.icipe.org
+    - {{ .Values.ingress.routes.malariaatlas.hostname | quote }}
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.ingress.gateway.name }}
+      namespace: {{ .Values.ingress.gateway.namespace }}
+      sectionName: {{ .Values.ingress.gateway.section }}
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /map-wms               # equivalent to /map-wms(/|$)(.*)
+            value: {{ .Values.ingress.routes.malariaatlas.path }}
       filters:
-        # nginx: /map-wms(/|$)(.*) + rewrite-target: /geoserver/Interventions/wms$2
-        # Gateway API: replace /map-wms with /geoserver/Interventions/wms and keep the rest
+        # Path rewrite - always applied
         - type: URLRewrite
           urlRewrite:
             path:
               type: ReplacePrefixMatch
-              replacePrefixMatch: /geoserver/Interventions/wms
-        # override Host header like nginx.ingress.kubernetes.io/upstream-vhost
+              replacePrefixMatch: {{ .Values.ingress.routes.malariaatlas.rewritePath | quote }}
+        # Host header - provider-specific
+        {{- if eq .Values.ingress.gateway.provider "traefik" }}
+        # Traefik: Use ExtensionRef to Middleware
         - type: ExtensionRef
           extensionRef:
             group: traefik.io
             kind: Middleware
             name: malariaatlas-host-headers
+        {{- else }}
+        # Envoy/Other: Use standard urlRewrite.hostname
+        - type: URLRewrite
+          urlRewrite:
+            hostname: data.malariaatlas.org
+        {{- end }}
       backendRefs:
-        - name: malariaatlas-service
-          port: 443
+        - name: {{ .Values.ingress.routes.malariaatlas.backend.service }}
+          port: {{ .Values.ingress.routes.malariaatlas.backend.port }}

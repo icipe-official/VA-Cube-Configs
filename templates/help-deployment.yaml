@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: help
   name: help
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployments.help.replicaCount }}
   selector:
     matchLabels:
       io.kompose.service: help
@@ -21,12 +21,10 @@ spec:
         io.kompose.service: help
     spec:
       containers:
-        - command:
-            - nginx
-            - -g
-            - daemon off;
+        - command: {{ .Values.deployments.help.command | toYaml | nindent 12 }}
           image: {{ .Values.images.help.repository }}:{{ .Values.images.help.tag }}
           name: help
       restartPolicy: Always
-      imagePullSecrets:
-        - name: ghcr-login-secret
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
