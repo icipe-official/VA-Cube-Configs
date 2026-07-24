@@ -5,13 +5,9 @@ metadata:
 spec:
   backoffLimit: {{ .Values.deployments.occurrencegeojob.backoffLimit }}
   template:
-    metadata:
-      labels:
-        azure.workload.identity/use: "true"
     spec:
       securityContext:
         runAsUser: {{ .Values.deployments.occurrencegeojob.securityContext.runAsUser }}
-      serviceAccountName: {{ .Values.deployments.occurrencegeojob.serviceAccountName }}
       {{- if .Values.global.imagePullSecrets }}
       imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
       {{- end }}

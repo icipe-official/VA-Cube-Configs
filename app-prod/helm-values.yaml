@@ -171,8 +171,8 @@ deployments:
     replicaCount: 1
     strategy:
       type: RollingUpdate
-    serviceAccountName: ""
-    azureWorkloadIdentity: true
+    # serviceAccountName: ""
+    # azureWorkloadIdentity: true
     env:
       DB_ENCRYPT_CONNECTION: "false"
       POSTGRES_DB: ""
