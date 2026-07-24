@@ -5,11 +5,11 @@
 global:
   namespace: vectoratlas
   secrets:
-    name: prod-secrets # Different secrets for production
+    name: uat-secrets
   imagePullSecrets:
     - name: ghcr-login-secret
-  serviceAccount:
-    name: azure-access-sa
+  # serviceAccount:
+  #   name: azure-access-sa
 
 # Ingress Configuration
 ingress:
