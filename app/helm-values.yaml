@@ -320,7 +320,7 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "test-7cab259b"
+    tag: "test-767e53e1"
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -335,7 +335,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-7cab259b"
+    tag: "test-767e53e1"
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
