@@ -168,7 +168,7 @@ storage:
 deployments:
   api:
     enabled: true
-    replicaCount: 1
+    replicaCount: 2
     strategy:
       type: RollingUpdate
     serviceAccountName: ""
@@ -247,7 +247,7 @@ deployments:
 
   ui:
     enabled: true
-    replicaCount: 1
+    replicaCount: 2
     env:
       TOKEN_KEY: ""
       API_URL: "api"
