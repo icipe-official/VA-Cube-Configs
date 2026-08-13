@@ -306,22 +306,22 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "25e39f50" # Should be updated to production tag
+    tag: "production-af775283" # Should be updated to production tag
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: production-4fa22fed
+    tag: production-af775283
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "e729da8c" # Should be updated to production tag
+    tag: "production-af775283" # Should be updated to production tag
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "dc4f4a25" # Should be updated to production tag
+    tag: "production-af775283" # Should be updated to production tag
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
@@ -330,7 +330,7 @@ images:
     tag: eb6a603f
   occurrencegeojob:
     repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: 8bcf3398 # Should be updated to production tag
+    tag: production-af775283 # Should be updated to production tag
   redis:
     repository: redis
     tag: "7"
