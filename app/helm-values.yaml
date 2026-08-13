@@ -329,7 +329,7 @@ images:
     tag: test-4fa22fed
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "e729da8c"
+    tag: "test-c7687588"
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
