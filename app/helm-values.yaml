@@ -326,7 +326,7 @@ images:
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: test-001fa8a3
+    tag: test-4fa22fed
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
     tag: "e729da8c"
