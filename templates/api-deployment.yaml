@@ -371,7 +371,13 @@ spec:
                   name: {{ .Values.global.secrets.name }}
                   key: POSTGRES_USER_UAT
               {{- end }}
-            
+            - name: DB_ENCRYPT_CONNECTION
+              {{- if .Values.deployments.api.env.DB_ENCRYPT_CONNECTION }}
+              value: {{ .Values.deployments.api.env.DB_ENCRYPT_CONNECTION | quote }}
+              {{- else }}
+              value: "true"
+              {{- end }}
+
             # Redis Connection - use values (hardcoded or override)
             - name: REDIS_HOST
               value: {{ .Values.deployments.api.env.REDIS_HOST | quote }}
