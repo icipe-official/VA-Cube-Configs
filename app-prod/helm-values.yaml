@@ -170,7 +170,7 @@ deployments:
     serviceAccountName: ""
     azureWorkloadIdentity: false
     env:
-      DB_ENCRYPT_CONNECTION: "false"
+      DB_ENCRYPT_CONNECTION: "true"
       POSTGRES_DB: ""
       POSTGRES_HOST: ""
       POSTGRES_PASSWORD: ""
