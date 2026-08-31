@@ -306,7 +306,7 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "production-b82f46b9" # Should be updated to production tag
+    tag: "production-1c027e3c" # Should be updated to production tag
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -321,7 +321,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "production-b82f46b9" # Should be updated to production tag
+    tag: "production-5110129d" # Should be updated to production tag
   umami:
     repository: ghcr.io/umami-software/umami
     tag: postgresql-v1.40
