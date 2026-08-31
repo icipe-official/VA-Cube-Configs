@@ -19,41 +19,41 @@ ingress:
     section: https
   routes:
     ui:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /
       stripPrefix: ""
       backend:
         service: ui
         port: 80
     api:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /vector-api
       stripPrefix: /
       backend:
         service: api
         port: 3001
     help:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /help
       stripPrefix: /
       backend:
         service: help
         port: 80
     ingestion:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /ingestion-api
       stripPrefix: /
       backend:
         service: python-backend
         port: 8000
     tileserver:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /data/
       backend:
         service: tileserver
         port: 80
     malariaatlas:
-      hostname: 134.112.16.22.nip.io
+      hostname: vectoratlas.icipe.org
       path: /map-wms
       rewritePath: /geoserver/Interventions/wms
       backend:
