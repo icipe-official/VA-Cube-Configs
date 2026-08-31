@@ -16,7 +16,7 @@ ingress:
     provider: envoy
     name: envoy-gateway
     namespace: default
-    section: https
+    section: https-vectoratlas
   routes:
     ui:
       hostname: vectoratlas.icipe.org
