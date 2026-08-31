@@ -190,7 +190,7 @@ deployments:
       SENT_EMAIL_FOLDER: ""
       TEMP_DIR: ""
       ANALYTICS_ADMIN_PASSWORD: ""
-      NEXT_PUBLIC_ANALYTICS_ID: "4d051c6d-8083-42a1-b728-a5e5fafdb644"
+      NEXT_PUBLIC_ANALYTICS_ID: "2b3b6da0-3e75-4d9e-be86-d588496a174e"
       TOKEN_KEY: ""
       AUTH0_AUDIENCE: ""
       AUTH0_CLIENT_ID: ""
