@@ -26,6 +26,13 @@ ingress:
       backend:
         service: ui
         port: 80
+    analytics:
+      hostname: vectoratlas.icipe.org
+      path: /analytics
+      stripPrefix: ""
+      backend:
+        service: analytics
+        port: 3000
     api:
       hostname: vectoratlas.icipe.org
       path: /vector-api
