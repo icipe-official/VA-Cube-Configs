@@ -331,7 +331,7 @@ images:
     tag: "production-b09d5b2b" # Should be updated to production tag
   umami:
     repository: ghcr.io/icipe-official/docker-umami
-    tag: postgresql-v1.40
+    tag: production-8a96647b
   nginx:
     repository: nginx
     tag: eb6a603f
