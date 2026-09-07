@@ -340,7 +340,7 @@ images:
     repository: ghcr.io/icipe-official/ui
     tag: "59c10b61"
   umami:
-    repository: ghcr.io/umami-software/umami
+    repository: ghcr.io/icipe-official/docker-umami
     tag: postgresql-v1.40
   nginx:
     repository: nginx

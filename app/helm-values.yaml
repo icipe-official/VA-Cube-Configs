@@ -344,7 +344,7 @@ images:
     repository: ghcr.io/icipe-official/ui
     tag: "test-e085bcf1"
   umami:
-    repository: ghcr.io/umami-software/umami
+    repository: ghcr.io/icipe-official/docker-umami
     tag: postgresql-v1.40
   nginx:
     repository: nginx
