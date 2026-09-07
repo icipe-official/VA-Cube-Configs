@@ -202,7 +202,7 @@ deployments:
       TEMP_DIR: ""
       # Auth
       ANALYTICS_ADMIN_PASSWORD: ""
-      NEXT_PUBLIC_ANALYTICS_ID: "2b3b6da0-3e75-4d9e-be86-d588496a174e"
+      NEXT_PUBLIC_ANALYTICS_ID: "1a94f11a-0a78-4b4a-9146-0d4d5758610e"
       TOKEN_KEY: ""
       # Auth0
       AUTH0_AUDIENCE: ""
