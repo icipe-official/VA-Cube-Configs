@@ -14,7 +14,7 @@ global:
 ingress:
   gateway:
     provider: traefik
-    name: vectoratlasicipe-gateway
+    name: vectoratlas-gateway
     namespace: vectoratlas
     section: https
   routes:
