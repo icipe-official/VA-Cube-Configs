@@ -333,7 +333,7 @@ images:
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: test-4fa22fed
+    tag: test-2a67f197
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
     tag: "test-c7687588"
