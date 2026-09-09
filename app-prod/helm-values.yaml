@@ -337,7 +337,7 @@ images:
     tag: eb6a603f
   occurrencegeojob:
     repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: production-b82f46b9 # Should be updated to production tag
+    tag: production-12312f1a # Should be updated to production tag
   redis:
     repository: redis
     tag: "7"
