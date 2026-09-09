@@ -22,7 +22,7 @@ spec:
       labels:
         io.kompose.service: api
         {{- if .Values.deployments.api.azureWorkloadIdentity }}
-        azure.workload.identity/use: "true"
+        azure.workload.identity/use: "false"
         {{- end }}
     spec:
       {{- if or .Values.deployments.api.serviceAccountName .Values.global.serviceAccount.name }}
