@@ -16,6 +16,12 @@ spec:
         - name: occurrencegeojob
           image: {{ .Values.images.occurrencegeojob.repository }}:{{ .Values.images.occurrencegeojob.tag }}
           env:
+            - name: PGSSL
+              {{- if .Values.deployments.api.env.DB_ENCRYPT_CONNECTION }}
+              value: {{ .Values.deployments.api.env.DB_ENCRYPT_CONNECTION | quote }}
+              {{- else }}
+              value: "true"
+              {{- end }}
             - name: PGDATABASE
               {{- if .Values.deployments.occurrencegeojob.env.PGDATABASE }}
               value: {{ .Values.deployments.occurrencegeojob.env.PGDATABASE | quote }}
