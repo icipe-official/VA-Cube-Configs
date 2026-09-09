@@ -351,7 +351,7 @@ images:
     tag: eb6a603f
   occurrencegeojob:
     repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: 8bcf3398
+    tag: test-636f6c35
   redis:
     repository: redis
     tag: "7"
