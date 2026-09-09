@@ -357,7 +357,7 @@ images:
     tag: "7"
 # Workload Identity Webhook
 workload-identity-webhook:
-  enabled: true
+  enabled: false
   azureTenantID: "dummy"
   azureTenantIDFromSecret:
     name: azure-workload-identity
