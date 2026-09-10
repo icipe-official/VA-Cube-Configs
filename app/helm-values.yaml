@@ -327,7 +327,7 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "test-3e660e1c"
+    tag: "test-08276b39"
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -342,7 +342,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-1ff2a563"
+    tag: "test-cc1c3d2d"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
@@ -351,7 +351,7 @@ images:
     tag: eb6a603f
   occurrencegeojob:
     repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: 8bcf3398
+    tag: test-636f6c35
   redis:
     repository: redis
     tag: "7"
