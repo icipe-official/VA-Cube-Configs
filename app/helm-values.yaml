@@ -327,7 +327,7 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "test-08276b39"
+    tag: "test-45033471"
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
@@ -342,7 +342,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-cc1c3d2d"
+    tag: "test-cafddaac"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
