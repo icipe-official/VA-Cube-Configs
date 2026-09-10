@@ -377,6 +377,20 @@ spec:
               {{- else }}
               value: "true"
               {{- end }}
+            
+            # Data Export Config Parameters
+            - name: DATA_EXPORT_BATCH_SIZE
+              {{- if .Values.deployments.api.env.DATA_EXPORT_BATCH_SIZE }}
+              value: {{ .Values.deployments.api.env.DATA_EXPORT_BATCH_SIZE | quote }}
+              {{- else }}
+              value: 200
+              {{- end }}
+            - name: DATA_EXPORT_YIELD_AFTER
+              {{- if .Values.deployments.api.env.DATA_EXPORT_YIELD_AFTER }}
+              value: {{ .Values.deployments.api.env.DATA_EXPORT_YIELD_AFTER | quote }}
+              {{- else }}
+              value: 5
+              {{- end }}
 
             # Redis Connection - use values (hardcoded or override)
             - name: REDIS_HOST

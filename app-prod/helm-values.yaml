@@ -178,6 +178,8 @@ deployments:
     azureWorkloadIdentity: false
     env:
       DB_ENCRYPT_CONNECTION: "true"
+      DATA_EXPORT_BATCH_SIZE: 1000
+      DATA_EXPORT_YIELD_AFTER: 2
       POSTGRES_DB: ""
       POSTGRES_HOST: ""
       POSTGRES_PASSWORD: ""
