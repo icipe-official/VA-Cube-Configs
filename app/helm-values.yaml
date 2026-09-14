@@ -333,7 +333,7 @@ images:
     tag: latest
   help:
     repository: ghcr.io/icipe-official/help
-    tag: test-2a67f197
+    tag: test-abc7be3f
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
     tag: "test-c7687588"
@@ -342,7 +342,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-69457b44"
+    tag: "test-abc7be3f"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
