@@ -335,7 +335,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "production-70b29a80" # Should be updated to production tag
+    tag: "production-91855202" # Should be updated to production tag
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: production-8a96647b
