@@ -24,3 +24,6 @@ spec:
       backendRefs:
         - name: {{ .Values.ingress.routes.api.backend.service }}
           port: {{ .Values.ingress.routes.api.backend.port }}
+      timeouts:
+        request: 300s
+        backendRequest: 300s
