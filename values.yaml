@@ -227,6 +227,13 @@ deployments:
       IMAP_PORT: ""
       IMAP_SERVER: ""
       FILE_STORAGE_TYPE: ""
+      DATABASE_GUIDE_FILE_NAME: "Vector_Atlas_Database_Guide.pdf"
+      DATA_EXPORT_BATCH_SIZE: "500"
+      DATA_EXPORT_YIELD_AFTER: "2"
+      EXPORT_USER_SAS_URLS: "true"
+      EXPORT_SAS_ULR_TTL_MINUTES: "120"
+      EXPORT_USE_PROXY_DOWNLOAD: "true"
+      EXPORT_DOWNLOAD_BASE_URL: ""
     volumes:
       - name: api-claim0
         pvcName: pvc-public

@@ -233,6 +233,13 @@ deployments:
       IMAP_SERVER: ""
       # File storage
       FILE_STORAGE_TYPE: ""
+      # Export Configuration
+      DATA_EXPORT_BATCH_SIZE: "500"
+      DATA_EXPORT_YIELD_AFTER: "2"
+      EXPORT_USE_SAS_URLS: "true"
+      EXPORT_SAS_URL_TTL_MINUTES: "120"
+      EXPORT_USE_PROXY_DOWNLOAD: "true"
+      EXPORT_DOWNLOAD_BASE_URL: "https://test.vectoratlas.icipe.org/vector-api"
     volumes:
       - name: api-claim0
         pvcName: pvc-public

@@ -391,6 +391,30 @@ spec:
               {{- else }}
               value: "5"
               {{- end }}
+            - name: EXPORT_USE_SAS_URLS
+              {{- if .Values.deployments.api.env.EXPORT_USE_SAS_URLS }}
+              value: {{ .Values.deployments.api.env.EXPORT_USE_SAS_URLS | quote }}
+              {{- else }}
+              value: "true"
+              {{- end }}
+            - name: EXPORT_SAS_URL_TTL_MINUTES
+              {{- if .Values.deployments.api.env.EXPORT_SAS_URL_TTL_MINUTES }}
+              value: {{ .Values.deployments.api.env.EXPORT_SAS_URL_TTL_MINUTES | quote }}
+              {{- else }}
+              value: "120"
+              {{- end }}
+            - name: EXPORT_USE_PROXY_DOWNLOAD
+              {{- if .Values.deployments.api.env.EXPORT_USE_PROXY_DOWNLOAD }}
+              value: {{ .Values.deployments.api.env.EXPORT_USE_PROXY_DOWNLOAD | quote }}
+              {{- else }}
+              value: "true"
+              {{- end }}
+            - name: EXPORT_DOWNLOAD_BASE_URL
+              {{- if .Values.deployments.api.env.EXPORT_DOWNLOAD_BASE_URL }}
+              value: {{ .Values.deployments.api.env.EXPORT_DOWNLOAD_BASE_URL | quote }}
+              {{- else }}
+              value: "https://vectoratlas.icipe.org/vector-api"
+              {{- end }}
 
             # Redis Connection - use values (hardcoded or override)
             - name: REDIS_HOST
