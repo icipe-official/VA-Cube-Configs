@@ -86,9 +86,7 @@ spec:
   {{- if .Values.storage.pvcs.api.storageClassName }}
   storageClassName: {{ .Values.storage.pvcs.api.storageClassName | quote }}
   {{- end }}
-  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-api
-  {{- end }}
 {{- end }}
 
 {{- if .Values.storage.pvcs.public.enabled | default false }}
@@ -105,9 +103,7 @@ spec:
   {{- if .Values.storage.pvcs.public.storageClassName }}
   storageClassName: {{ .Values.storage.pvcs.public.storageClassName | quote }}
   {{- end }}
-  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-public
-  {{- end }}
 {{- end }}
 
 {{- if .Values.storage.pvcs.data.enabled | default false }}
@@ -124,9 +120,7 @@ spec:
   {{- if .Values.storage.pvcs.data.storageClassName }}
   storageClassName: {{ .Values.storage.pvcs.data.storageClassName | quote }}
   {{- end }}
-  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-data
-  {{- end }}
 {{- end }}
 
 {{- if .Values.storage.pvcs.occurrencedata.enabled | default false }}
@@ -143,8 +137,6 @@ spec:
   {{- if .Values.storage.pvcs.occurrencedata.storageClassName }}
   storageClassName: {{ .Values.storage.pvcs.occurrencedata.storageClassName | quote }}
   {{- end }}
-  {{- if .Values.storage.pvs.enabled }}
   volumeName: pv-occurrencedata
-  {{- end }}
 {{- end }}
 

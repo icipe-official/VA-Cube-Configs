@@ -173,7 +173,7 @@ deployments:
     enabled: true
     replicaCount: 2
     strategy:
-      type: Recreate
+      type: RollingUpdate
     serviceAccountName: ""
     azureWorkloadIdentity: true
     env:
