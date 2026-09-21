@@ -349,7 +349,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-30bcc78e"
+    tag: "test-379f5a01"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
