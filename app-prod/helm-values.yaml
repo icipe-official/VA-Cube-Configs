@@ -329,13 +329,13 @@ images:
     tag: production-b82f46b9
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "production-b82f46b9" # Should be updated to production tag
+    tag: "production-8910797a" # Should be updated to production tag
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "production-80e8a517" # Should be updated to production tag
+    tag: "production-8910797a" # Should be updated to production tag
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: production-8a96647b
