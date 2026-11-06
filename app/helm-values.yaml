@@ -343,13 +343,13 @@ images:
     tag: test-abc7be3f
   ingestionapi:
     repository: ghcr.io/icipe-official/ingestionapi
-    tag: "test-c7687588"
+    tag: "test-ebbb7a0b"
   tileserver:
     repository: ghcr.io/icipe-official/tileserver
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-adb21165"
+    tag: "test-ebbb7a0b"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
