@@ -151,6 +151,13 @@ storage:
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
+    postgis:
+      enabled: false
+      path: /opt/dmmg-kubernetes-test/vectoratlas/postgis
+      size: 10Gi
+      accessModes: [ReadWriteOnce]
+      reclaimPolicy: Retain
+      storageClassName: ""
   pvcs:
     api:
       enabled: true
@@ -170,6 +177,11 @@ storage:
     occurrencedata:
       enabled: true
       storageSize: 1Gi
+      accessModes: [ReadWriteOnce]
+      storageClassName: ""
+    postgis:
+      enabled: false
+      storageSize: 10Gi
       accessModes: [ReadWriteOnce]
       storageClassName: ""
 # =============================================================================
@@ -312,6 +324,16 @@ deployments:
     replicaCount: 1
     connectionString: ""
     containerName: vectoratlas-container
+  # In-cluster PostGIS - disabled by default; enabled only for the test
+  # environment (see app/helm-values.yaml). The postgis-init hook Job applies
+  # files/init_db.sql (mirror of src/Database/init_db.sql); the api's
+  # run-db-migrations initContainer applies the TypeORM migrations on top.
+  postgis:
+    enabled: false
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+      POSTGRES_DB: mva
 # =============================================================================
 # Image Configuration
 # =============================================================================
@@ -346,6 +368,9 @@ images:
   azuriteSetup:
     repository: mcr.microsoft.com/azure-cli
     tag: "latest"
+  postgis:
+    repository: docker.io/postgis/postgis
+    tag: "18-master"
   redis:
     repository: redis
     tag: "7"

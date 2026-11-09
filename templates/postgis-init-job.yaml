@@ -1,0 +1,58 @@
+{{- if .Values.deployments.postgis.enabled | default false }}
+# Applies the base schema (files/init_db.sql, mirroring src/Database/init_db.sql)
+# to the in-cluster postgis. The API's run-db-migrations initContainer then
+# applies the TypeORM migrations on top (the repo's two-source schema pattern).
+# Idempotent: skips when the schema is already present.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgis-init
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      containers:
+        - name: postgis-init
+          image: {{ .Values.images.postgis.repository }}:{{ .Values.images.postgis.tag }}
+          env:
+            - name: PGHOST
+              value: "postgis"
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: {{ .Values.deployments.postgis.env.POSTGRES_USER | quote }}
+            - name: PGPASSWORD
+              value: {{ .Values.deployments.postgis.env.POSTGRES_PASSWORD | quote }}
+            - name: PGDATABASE
+              value: {{ .Values.deployments.postgis.env.POSTGRES_DB | quote }}
+            - name: INIT_SQL_B64
+              valueFrom:
+                configMapKeyRef:
+                  name: postgis-init-sql
+                  key: init_db.sql
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              # skip if the schema is already there (e.g. hook re-run after upgrade)
+              if [ -n "$(psql -tAc "SELECT to_regclass('public.occurrence')")" ]; then
+                echo "database already initialized, skipping"
+                exit 0
+              fi
+              for i in $(seq 1 30); do
+                psql -tAc "SELECT 1" >/dev/null 2>&1 && break
+                echo "postgis not ready yet ($i/30)..."
+                sleep 5
+              done
+              echo "$INIT_SQL_B64" | base64 -d > /tmp/init_db.sql
+              # ON_ERROR_STOP=0: the dump ends with CREATE DATABASE umami, which
+              # may legitimately fail; table re-creates are avoided by the skip above
+              psql -v ON_ERROR_STOP=0 -f /tmp/init_db.sql
+              echo "init_db.sql applied"
+{{- end }}

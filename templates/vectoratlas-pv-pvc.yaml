@@ -140,3 +140,34 @@ spec:
   volumeName: pv-occurrencedata
 {{- end }}
 
+{{- if .Values.deployments.postgis.enabled | default false }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-postgis
+spec:
+  capacity:
+    storage: {{ .Values.storage.pvs.postgis.size }}
+  accessModes: {{ .Values.storage.pvs.postgis.accessModes | toYaml | nindent 4 }}
+  {{- if .Values.storage.pvs.postgis.storageClassName }}
+  storageClassName: {{ .Values.storage.pvs.postgis.storageClassName | quote }}
+  {{- end }}
+  hostPath:
+    path: {{ .Values.storage.pvs.postgis.path | quote }}
+  persistentVolumeReclaimPolicy: {{ .Values.storage.pvs.postgis.reclaimPolicy | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-postgis
+spec:
+  accessModes: {{ .Values.storage.pvcs.postgis.accessModes | toYaml | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.storage.pvcs.postgis.storageSize }}
+  {{- if .Values.storage.pvcs.postgis.storageClassName }}
+  storageClassName: {{ .Values.storage.pvcs.postgis.storageClassName | quote }}
+  {{- end }}
+  volumeName: pv-postgis
+{{- end }}

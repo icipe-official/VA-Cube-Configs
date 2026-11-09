@@ -1,0 +1,12 @@
+{{- if .Values.deployments.postgis.enabled | default false }}
+# Schema init SQL. NOTE: this file mirrors
+# vectoratlas-software-code/src/Database/init_db.sql — keep them in sync.
+# Stored base64-encoded because the dump contains COPY ... FROM stdin data
+# whose lines must not be re-indented.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgis-init-sql
+binaryData:
+  init_db.sql: {{ .Files.Get "files/init_db.sql" | b64enc | quote }}
+{{- end }}

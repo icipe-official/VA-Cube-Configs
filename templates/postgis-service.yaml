@@ -1,0 +1,15 @@
+{{- if .Values.deployments.postgis.enabled | default false }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgis
+  labels:
+    app: postgis
+spec:
+  selector:
+    app: postgis
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+{{- end }}

@@ -146,6 +146,13 @@ storage:
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
       storageClassName: ""
+    postgis:
+      enabled: true
+      path: /opt/dmmg-kubernetes-test/vectoratlas/postgis
+      size: 10Gi
+      accessModes: [ReadWriteOnce]
+      reclaimPolicy: Retain
+      storageClassName: ""
   pvcs:
     api:
       enabled: true
@@ -167,6 +174,11 @@ storage:
       storageSize: 1Gi
       accessModes: [ReadWriteOnce]
       storageClassName: ""
+    postgis:
+      enabled: true
+      storageSize: 10Gi
+      accessModes: [ReadWriteOnce]
+      storageClassName: ""
 # Deployment Configuration
 deployments:
   api:
@@ -177,12 +189,12 @@ deployments:
     serviceAccountName: ""
     azureWorkloadIdentity: true
     env:
-      # Database
-      DB_ENCRYPT_CONNECTION: "true"
-      POSTGRES_DB: ""
-      POSTGRES_HOST: ""
-      POSTGRES_PASSWORD: ""
-      POSTGRES_USER: ""
+      # Database - in-cluster postgis (deployments.postgis), not the Azure DB
+      DB_ENCRYPT_CONNECTION: "false"
+      POSTGRES_DB: "mva"
+      POSTGRES_HOST: "postgis"
+      POSTGRES_PASSWORD: "postgrespass"
+      POSTGRES_USER: "postgres"
       # External services - hardcoded test values
       ANALYTICS_API_URL: "http://analytics:3000/analytics/api"
       DATA_INGESTION_URL: "http://python-backend:8000/upload/data/v2/"
@@ -265,10 +277,10 @@ deployments:
     enabled: true
     replicaCount: 1
     env:
-      POSTGRES_DB: ""
-      POSTGRES_HOST: ""
-      POSTGRES_PASSWORD: ""
-      POSTGRES_USER: ""
+      POSTGRES_DB: "mva"
+      POSTGRES_HOST: "postgis"
+      POSTGRES_PASSWORD: "postgrespass"
+      POSTGRES_USER: "postgres"
       POSTGRES_PORT: "5432"
   ui:
     enabled: true
@@ -325,6 +337,16 @@ deployments:
     replicaCount: 1
     connectionString: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
     containerName: vectoratlas-container
+  # In-cluster PostGIS for the test environment: replaces the remote Azure
+  # PostgreSQL (which is slow for bulk deletes and not disposable). The
+  # postgis-init hook Job applies files/init_db.sql; the api initContainer
+  # runs the TypeORM migrations on top.
+  postgis:
+    enabled: true
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+      POSTGRES_DB: mva
 # Image Configuration
 images:
   api:
@@ -357,6 +379,9 @@ images:
   azuriteSetup:
     repository: mcr.microsoft.com/azure-cli
     tag: "latest"
+  postgis:
+    repository: docker.io/postgis/postgis
+    tag: "18-master"
   redis:
     repository: redis
     tag: "7"

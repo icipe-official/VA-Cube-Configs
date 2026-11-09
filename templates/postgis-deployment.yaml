@@ -1,0 +1,45 @@
+{{- if .Values.deployments.postgis.enabled | default false }}
+# In-cluster PostGIS for the TEST environment only (prod keeps the external
+# Azure PostgreSQL via secrets). Single replica + RWO volume.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgis
+  labels:
+    app: postgis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgis
+  strategy:
+    type: Recreate # single ReadWriteOnce volume
+  template:
+    metadata:
+      labels:
+        app: postgis
+    spec:
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: postgis
+          image: {{ .Values.images.postgis.repository }}:{{ .Values.images.postgis.tag }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.deployments.postgis.env.POSTGRES_USER | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.deployments.postgis.env.POSTGRES_PASSWORD | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.deployments.postgis.env.POSTGRES_DB | quote }}
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - name: postgis-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgis-data
+          persistentVolumeClaim:
+            claimName: pvc-postgis
+{{- end }}
