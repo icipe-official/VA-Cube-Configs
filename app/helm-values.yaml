@@ -329,7 +329,7 @@ deployments:
 images:
   api:
     repository: ghcr.io/icipe-official/api
-    tag: "test-76ae6d5d"
+    tag: "test-1af5a73e"
   dbMigrations:
     repository: ghcr.io/icipe-official/db-migrations
     tag: latest
