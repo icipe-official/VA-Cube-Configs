@@ -41,8 +41,17 @@ spec:
             # /var/lib/postgresql/data makes the image refuse to start
             - name: postgis-data
               mountPath: /var/lib/postgresql
+            # base schema: applied automatically by the image entrypoint on
+            # first boot of an empty volume, before postgis accepts connections
+            # (so the api's run-db-migrations initContainer always runs after it)
+            - name: postgis-init-sql
+              mountPath: /docker-entrypoint-initdb.d/init_db.sql
+              subPath: init_db.sql
       volumes:
         - name: postgis-data
           persistentVolumeClaim:
             claimName: pvc-postgis
+        - name: postgis-init-sql
+          configMap:
+            name: postgis-init-sql
 {{- end }}
