@@ -1,8 +1,11 @@
 {{- if .Values.deployments.azurite.enabled | default false }}
 # Post-process setup for azurite: create the blob container the API expects
-# (AZURE_BLOB_CONTAINER). Runs as a helm post-install/post-upgrade hook using
-# the api image, which already ships @azure/storage-blob. Retries until the
-# azurite service is up.
+# (AZURE_BLOB_CONTAINER). Runs as a helm post-install/post-upgrade hook.
+#
+# Deliberately uses a dedicated stable image (images.azuriteSetup, azure-cli)
+# instead of the api image: the api tag changes on every API build, which
+# would make helm re-run this hook on every API release. With a stable image
+# the hook only re-runs when the azurite values themselves change.
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -20,12 +23,15 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: azurite-setup
-          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
-          command: ["/bin/sh", "-c"]
+          image: {{ .Values.images.azuriteSetup.repository }}:{{ .Values.images.azuriteSetup.tag }}
+          command: ["/bin/bash", "-c"]
           args:
             - |
               for i in $(seq 1 30); do
-                node -e "const {BlobServiceClient}=require('@azure/storage-blob');const c=BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);c.getContainerClient(process.env.AZURE_BLOB_CONTAINER).createIfNotExists().then(()=>{console.log('container ready:',process.env.AZURE_BLOB_CONTAINER);process.exit(0)}).catch(e=>{console.error(e.message);process.exit(1)})" && exit 0
+                az storage container create \
+                  --name "$AZURE_BLOB_CONTAINER" \
+                  --connection-string "$AZURE_STORAGE_CONNECTION_STRING" \
+                  --only-show-errors && { echo "container ready: $AZURE_BLOB_CONTAINER"; exit 0; }
                 echo "azurite not ready yet, retrying ($i/30)..."
                 sleep 5
               done

@@ -342,7 +342,10 @@ images:
     tag: eb6a603f
   azurite:
     repository: mcr.microsoft.com/azure-storage/azurite
-    tag: "3.34.0"
+    tag: "latest"
+  azuriteSetup:
+    repository: mcr.microsoft.com/azure-cli
+    tag: "latest"
   redis:
     repository: redis
     tag: "7"

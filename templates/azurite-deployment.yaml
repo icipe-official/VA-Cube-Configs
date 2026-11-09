@@ -25,7 +25,9 @@ spec:
       containers:
         - name: azurite
           image: {{ .Values.images.azurite.repository }}:{{ .Values.images.azurite.tag }}
-          args: ["azurite-blob", "--blobHost", "0.0.0.0", "--blobPort", "10000"]
+          # --skipApiVersionCheck: the api image's @azure/storage-blob SDK may use a
+          # newer x-ms-version than the pinned azurite build understands
+          args: ["azurite-blob", "--blobHost", "0.0.0.0", "--blobPort", "10000", "--skipApiVersionCheck"]
           ports:
             - containerPort: 10000
               name: blob
