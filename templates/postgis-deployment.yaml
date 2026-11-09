@@ -36,8 +36,11 @@ spec:
             - containerPort: 5432
               name: postgres
           volumeMounts:
+            # PG 18+ images expect the mount at /var/lib/postgresql (data lives
+            # in a major-version-specific subdir, e.g. 18/docker) — mounting at
+            # /var/lib/postgresql/data makes the image refuse to start
             - name: postgis-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
       volumes:
         - name: postgis-data
           persistentVolumeClaim:

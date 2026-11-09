@@ -148,7 +148,7 @@ storage:
       storageClassName: ""
     postgis:
       enabled: false
-      path: /opt/dmmg-kubernetes-test/vectoratlas/postgis
+      path: /opt/dmmg-kubernetes-test/vectoratlas/postgis18
       size: 10Gi
       accessModes: [ReadWriteOnce]
       reclaimPolicy: Retain
