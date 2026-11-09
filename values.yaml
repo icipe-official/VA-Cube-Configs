@@ -201,6 +201,7 @@ deployments:
       DATA_TEMPLATES_FOLDER: /usr/src/app/dist/public/templates
       TILESERVER_DATA_FOLDER: /data/
       FULL_OCCURRENCE_DATA_FOLDER: /occurrence_data
+      OCC_GEO_JOB_DIR: /usr/src/OccurrenceGeoJob # embedded in the api image; spawned on demand to regenerate the full occurrence data
       SENT_EMAIL_FOLDER: ""
       TEMP_DIR: ""
       ANALYTICS_ADMIN_PASSWORD: ""
@@ -303,27 +304,14 @@ deployments:
     enabled: true
     replicaCount: 1
     command: ["nginx", "-g", "daemon off;"]
-  occurrencegeojob:
-    enabled: true
-    backoffLimit: 4
-    restartPolicy: OnFailure
-    serviceAccountName: azure-access-sa
-    securityContext:
-      runAsUser: 0
-    env:
-      PGDATABASE: ""
-      PGHOST: ""
-      PGPASSWORD: ""
-      PGUSER: ""
-      PGPORT: "5432"
-      LOGGER_LEVEL: debug
-      LOGGER_OUTPUT: console
-      TARGET_DIRECTORY: /home/app/app/.tmp
-      STAGING_DIRECTORY: /home/app/app/.tmp/staging
-    volumes:
-      - name: occurrencegeojob-volume
-        pvcName: pvc-occurrencedata
-        mountPath: /home/app/app/.tmp
+  # Azurite (Azure Blob Storage emulator) - disabled by default; enabled only
+  # for the test environment (see app/helm-values.yaml). The OccurrenceGeoJob
+  # is no longer deployed separately: it is embedded in the api image.
+  azurite:
+    enabled: false
+    replicaCount: 1
+    connectionString: ""
+    containerName: vectoratlas-container
 # =============================================================================
 # Image Configuration
 # =============================================================================
@@ -352,9 +340,9 @@ images:
   nginx:
     repository: nginx
     tag: eb6a603f
-  occurrencegeojob:
-    repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: 8bcf3398
+  azurite:
+    repository: mcr.microsoft.com/azure-storage/azurite
+    tag: "3.34.0"
   redis:
     repository: redis
     tag: "7"

@@ -333,6 +333,8 @@ spec:
               value: {{ .Values.deployments.api.env.TILESERVER_DATA_FOLDER | quote }}
             - name: FULL_OCCURRENCE_DATA_FOLDER
               value: {{ .Values.deployments.api.env.FULL_OCCURRENCE_DATA_FOLDER | quote }}
+            - name: OCC_GEO_JOB_DIR
+              value: {{ .Values.deployments.api.env.OCC_GEO_JOB_DIR | default "/usr/src/OccurrenceGeoJob" | quote }}
             
             # PostgreSQL Connection - from secret or value
             - name: POSTGRES_DB

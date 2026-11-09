@@ -1,0 +1,39 @@
+{{- if .Values.deployments.azurite.enabled | default false }}
+# Post-process setup for azurite: create the blob container the API expects
+# (AZURE_BLOB_CONTAINER). Runs as a helm post-install/post-upgrade hook using
+# the api image, which already ships @azure/storage-blob. Retries until the
+# azurite service is up.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: azurite-setup
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      containers:
+        - name: azurite-setup
+          image: {{ .Values.images.api.repository }}:{{ .Values.images.api.tag }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              for i in $(seq 1 30); do
+                node -e "const {BlobServiceClient}=require('@azure/storage-blob');const c=BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);c.getContainerClient(process.env.AZURE_BLOB_CONTAINER).createIfNotExists().then(()=>{console.log('container ready:',process.env.AZURE_BLOB_CONTAINER);process.exit(0)}).catch(e=>{console.error(e.message);process.exit(1)})" && exit 0
+                echo "azurite not ready yet, retrying ($i/30)..."
+                sleep 5
+              done
+              echo "failed to create blob container"
+              exit 1
+          env:
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              value: {{ .Values.deployments.azurite.connectionString | quote }}
+            - name: AZURE_BLOB_CONTAINER
+              value: {{ .Values.deployments.azurite.containerName | default "vectoratlas-container" | quote }}
+{{- end }}

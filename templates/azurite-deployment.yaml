@@ -1,0 +1,32 @@
+{{- if .Values.deployments.azurite.enabled | default false }}
+# Azurite (Azure Blob Storage emulator) - test environment only, because the
+# real Azure blob endpoint is not reachable from browsers on
+# test.vectoratlas.icipe.org. Only in-cluster access is needed: uploads go
+# through the API and export downloads are proxied by the API.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azurite
+  labels:
+    app: azurite
+spec:
+  replicas: {{ .Values.deployments.azurite.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: azurite
+  template:
+    metadata:
+      labels:
+        app: azurite
+    spec:
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ .Values.global.imagePullSecrets | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: azurite
+          image: {{ .Values.images.azurite.repository }}:{{ .Values.images.azurite.tag }}
+          args: ["azurite-blob", "--blobHost", "0.0.0.0", "--blobPort", "10000"]
+          ports:
+            - containerPort: 10000
+              name: blob
+{{- end }}

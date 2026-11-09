@@ -1,0 +1,15 @@
+{{- if .Values.deployments.azurite.enabled | default false }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: azurite
+  labels:
+    app: azurite
+spec:
+  selector:
+    app: azurite
+  ports:
+    - name: blob
+      port: 10000
+      targetPort: 10000
+{{- end }}

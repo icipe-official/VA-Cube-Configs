@@ -198,6 +198,7 @@ deployments:
       DATA_TEMPLATES_FOLDER: /usr/src/app/dist/public/templates
       TILESERVER_DATA_FOLDER: /data/
       FULL_OCCURRENCE_DATA_FOLDER: /occurrence_data
+      OCC_GEO_JOB_DIR: /usr/src/OccurrenceGeoJob # embedded in the api image; spawned on demand to regenerate the full occurrence data
       SENT_EMAIL_FOLDER: ""
       TEMP_DIR: ""
       # Auth
@@ -209,8 +210,8 @@ deployments:
       AUTH0_CLIENT_ID: ""
       AUTH0_CLIENT_SECRET: ""
       AUTH0_ISSUER_URL: ""
-      # Azure
-      AZURE_STORAGE_CONNECTION_STRING: ""
+      # Azure - test uses the in-cluster azurite emulator (see deployments.azurite)
+      AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
       # Base URL
       BASE_URL: ""
       # Datacite
@@ -231,12 +232,15 @@ deployments:
       # IMAP
       IMAP_PORT: ""
       IMAP_SERVER: ""
-      # File storage
-      FILE_STORAGE_TYPE: ""
+      # File storage - Azure (azurite) in test; browsers never talk to blob
+      # storage directly: uploads go through the API and export downloads are
+      # proxied (EXPORT_USE_PROXY_DOWNLOAD=true), so SAS URLs must stay off
+      # (they would point at the in-cluster azurite service)
+      FILE_STORAGE_TYPE: "Azure"
       # Export Configuration
       DATA_EXPORT_BATCH_SIZE: "500"
       DATA_EXPORT_YIELD_AFTER: "2"
-      EXPORT_USE_SAS_URLS: "true"
+      EXPORT_USE_SAS_URLS: "false"
       EXPORT_SAS_URL_TTL_MINUTES: "120"
       EXPORT_USE_PROXY_DOWNLOAD: "true"
       EXPORT_DOWNLOAD_BASE_URL: "https://test.vectoratlas.icipe.org/vector-api"
@@ -309,27 +313,18 @@ deployments:
     enabled: true
     replicaCount: 1
     command: ["nginx", "-g", "daemon off;"]
-  occurrencegeojob:
+  # Azurite (Azure Blob Storage emulator) - test environment only, because the
+  # real Azure blob endpoint is not reachable from browsers on
+  # test.vectoratlas.icipe.org. Export downloads are proxied by the API
+  # (EXPORT_USE_PROXY_DOWNLOAD=true, EXPORT_USE_SAS_URLS=false) and uploads go
+  # through the API, so only in-cluster access to blob storage is needed.
+  # The OccurrenceGeoJob is no longer deployed separately: it is embedded in
+  # the api image and spawned on demand (OCC_GEO_JOB_DIR).
+  azurite:
     enabled: true
-    backoffLimit: 4
-    restartPolicy: OnFailure
-    serviceAccountName: azure-access-sa
-    securityContext:
-      runAsUser: 0
-    env:
-      PGDATABASE: ""
-      PGHOST: ""
-      PGPASSWORD: ""
-      PGUSER: ""
-      PGPORT: "5432"
-      LOGGER_LEVEL: debug
-      LOGGER_OUTPUT: console
-      TARGET_DIRECTORY: /home/app/app/.tmp
-      STAGING_DIRECTORY: /home/app/app/.tmp/staging
-    volumes:
-      - name: occurrencegeojob-volume
-        pvcName: pvc-occurrencedata
-        mountPath: /home/app/app/.tmp
+    replicaCount: 1
+    connectionString: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+    containerName: vectoratlas-container
 # Image Configuration
 images:
   api:
@@ -356,9 +351,9 @@ images:
   nginx:
     repository: nginx
     tag: eb6a603f
-  occurrencegeojob:
-    repository: ghcr.io/icipe-official/occurrencegeojob
-    tag: test-636f6c35
+  azurite:
+    repository: mcr.microsoft.com/azure-storage/azurite
+    tag: "3.34.0"
   redis:
     repository: redis
     tag: "7"
