@@ -859,3 +859,5 @@ Irish et al.	Updated list of Anopheles (Diptera: Culicidae) species by country i
 \.
 
 CREATE DATABASE umami;
+-- advance sequences past any rows seeded by this dump (pg_dump excerpt did not include setval)
+SELECT setval('reference_num_id_seq', (SELECT COALESCE(max(num_id),1) FROM public.reference));
