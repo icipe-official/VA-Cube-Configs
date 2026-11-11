@@ -366,7 +366,7 @@ images:
     tag: 070e96a5
   ui:
     repository: ghcr.io/icipe-official/ui
-    tag: "test-0387127c"
+    tag: "test-3dfdea23"
   umami:
     repository: ghcr.io/icipe-official/docker-umami
     tag: test-c68d87ce
