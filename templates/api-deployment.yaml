@@ -417,6 +417,12 @@ spec:
               {{- else }}
               value: "https://vectoratlas.icipe.org/vector-api"
               {{- end }}
+            - name: EXPORT_FROM_MV
+              {{- if .Values.deployments.api.env.EXPORT_FROM_MV }}
+              value: {{ .Values.deployments.api.env.EXPORT_FROM_MV | quote }}
+              {{- else }}
+              value: "false"
+              {{- end }}
 
             # Redis Connection - use values (hardcoded or override)
             - name: REDIS_HOST

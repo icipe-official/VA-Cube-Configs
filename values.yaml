@@ -247,6 +247,7 @@ deployments:
       EXPORT_SAS_ULR_TTL_MINUTES: "120"
       EXPORT_USE_PROXY_DOWNLOAD: "true"
       EXPORT_DOWNLOAD_BASE_URL: ""
+      EXPORT_FROM_MV: "true"
     volumes:
       - name: api-claim0
         pvcName: pvc-public
